@@ -141,6 +141,48 @@ class ManifestTests(unittest.TestCase):
         errors = v.card_errors({"apps": [app]}, fetch=fetch)
         self.assertTrue(any("must be omitted" in msg for msg in errors), errors)
 
+    def test_non_string_href_is_reported(self):
+        def fetch(app_id):
+            return {
+                "id": app_id,
+                "name": "Porridge",
+                "summary": "s",
+                "status": "live",
+                "href": {"url": "/kld/apps/porridge/"},
+            }, None
+
+        app = {
+            "id": "porridge",
+            "name": "Porridge",
+            "summary": "s",
+            "status": "live",
+            "themes": ["being-principled"],
+            "entry": "porridge/",
+        }
+        errors = v.card_errors({"apps": [app]}, fetch=fetch)
+        self.assertEqual(errors, ["porridge: card href must be a string"])
+
+    def test_non_string_entry_is_reported(self):
+        def fetch(app_id):
+            return {
+                "id": app_id,
+                "name": "Porridge",
+                "summary": "s",
+                "status": "live",
+                "href": "/kld/apps/porridge/",
+            }, None
+
+        app = {
+            "id": "porridge",
+            "name": "Porridge",
+            "summary": "s",
+            "status": "live",
+            "themes": ["being-principled"],
+            "entry": 1,
+        }
+        errors = v.card_errors({"apps": [app]}, fetch=fetch)
+        self.assertEqual(errors, ["porridge: manifest entry must be a string"])
+
 
 if __name__ == "__main__":
     unittest.main()

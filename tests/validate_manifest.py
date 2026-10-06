@@ -111,8 +111,21 @@ def card_errors(manifest, fetch=fetch_card) -> list[str]:
         for field in ("name", "summary", "status"):
             if card.get(field) != app.get(field):
                 found.append(f"{app_id}: {field} does not match card.json")
-        href = card.get("href") or ""
-        entry = app.get("entry") or ""
+        href = card.get("href")
+        entry = app.get("entry")
+        # A truthy non-string (a number, an object) must be reported.
+        # Calling rstrip or strip on it crashes the validator.
+        bad_type = False
+        if not isinstance(href, (str, type(None))):
+            found.append(f"{app_id}: card href must be a string")
+            bad_type = True
+        if not isinstance(entry, (str, type(None))):
+            found.append(f"{app_id}: manifest entry must be a string")
+            bad_type = True
+        if bad_type:
+            continue
+        href = href or ""
+        entry = entry or ""
         if not href:
             if entry:
                 found.append(f"{app_id}: card has no href, so manifest entry must be omitted")
