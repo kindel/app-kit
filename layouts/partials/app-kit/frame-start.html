@@ -4,6 +4,9 @@
 {{- with site.Data.apphost.iconBase }}{{ $iconBase = . }}{{ end -}}
 {{- if not $iconBase }}{{ errorf "data/apphost.json needs iconBase" }}{{ end -}}
 {{- if not (strings.HasSuffix $iconBase "/") }}{{ $iconBase = printf "%s/" $iconBase }}{{ end -}}
+{{- $statusBeta := "" -}}
+{{- with site.Data.apphost.statusBeta }}{{ $statusBeta = . }}{{ end -}}
+{{- if and (eq $card.status "beta") (not $statusBeta) }}{{ errorf "data/apphost.json needs statusBeta" }}{{ end -}}
 {{- $explicit := false -}}
 {{- $headingTitle := "" -}}
 {{- $headingId := "" -}}
@@ -29,15 +32,20 @@
   {{- end }}
   <div class="app-frame-toolbar">
     <img class="app-frame-icon" src="{{ printf "%s%s.png" $iconBase $card.id }}" width="36" height="36" alt="">
-    {{- if $explicit }}
-      {{- if .nameHref }}
-      <a class="app-frame-name" href="{{ .nameHref }}">{{ $card.name }}</a>
+    <div class="app-frame-identity">
+      {{- if $explicit }}
+        {{- if .nameHref }}
+        <a class="app-frame-name" href="{{ .nameHref }}">{{ $card.name }}</a>
+        {{- else }}
+        <p class="app-frame-name">{{ $card.name }}</p>
+        {{- end }}
       {{- else }}
-      <p class="app-frame-name">{{ $card.name }}</p>
+      <h1 class="app-frame-name">{{ if .nameHref }}<a href="{{ .nameHref }}">{{ $card.name }}</a>{{ else }}{{ $card.name }}{{ end }}</h1>
       {{- end }}
-    {{- else }}
-    <h1 class="app-frame-name">{{ if .nameHref }}<a href="{{ .nameHref }}">{{ $card.name }}</a>{{ else }}{{ $card.name }}{{ end }}</h1>
-    {{- end }}
+      {{- if eq $card.status "beta" }}
+      <span class="app-frame-beta">{{ $statusBeta }}</span>
+      {{- end }}
+    </div>
     {{- with .controls }}
     <div class="app-frame-controls">{{ . | safeHTML }}</div>
     {{- end }}

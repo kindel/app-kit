@@ -110,5 +110,19 @@ if (!frame.includes("app-frame-title") || !frame.includes("<h1")) {
 if (!frame.includes("appkitHeading")) {
   fail("frame partial must read the title the hero stashed");
 }
+if (!frame.includes('eq $card.status "beta"') || !frame.includes("statusBeta") || !frame.includes("app-frame-beta")) {
+  fail("frame badge must follow card status beta and the host Beta label");
+}
+if (frame.includes(">Beta<") || frame.includes('"Beta"') || frame.includes("tenets") || frame.includes("porridge")) {
+  fail("frame badge must not hard-code the word or the app list");
+}
+const renderAt = frame.lastIndexOf('eq $card.status "beta"');
+const branch = frame.slice(renderAt, frame.indexOf("end", renderAt));
+if (!branch.includes("app-frame-beta") || !branch.includes("$statusBeta")) {
+  fail("Beta badge must be rendered only in the beta status branch");
+}
+if (!chrome.includes(".app-frame-beta")) {
+  fail("chrome.css needs the Beta badge");
+}
 
 console.log("clients: ok");
