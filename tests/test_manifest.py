@@ -196,6 +196,11 @@ class ManifestTests(unittest.TestCase):
         errors = v.preview_errors(self.manifest)
         self.assertEqual(errors, [])
 
+    def test_missing_preview_is_rejected(self):
+        manifest = {"apps": [{"id": "porridge", "entry": "porridge/"}]}
+        errors = v.preview_errors(manifest)
+        self.assertEqual(errors, ["porridge: published app needs a preview"])
+
     def test_unpublished_preview_is_rejected(self):
         manifest = {"apps": [{"id": "30-60-90", "preview": {"src": "x.webp", "alt": "x"}}]}
         errors = v.preview_errors(manifest)

@@ -9,7 +9,7 @@ The page shell stays with the host. This repo does not ship Hugo layouts for an 
 | File | What it is |
 |------|------------|
 | `manifest.json` | Apps, theme list, entry paths, route templates, and preview crops. |
-| `previews/` | Webp crops of each published app's first screen. |
+| `previews/` | WebP crops of each published app's first screen. |
 | `manifest.schema.json` | Schema for that file. |
 | `feedback.js` | Feedback form client. |
 | `attribution.js` | Renders the required attribution link. |
