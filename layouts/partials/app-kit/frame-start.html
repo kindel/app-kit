@@ -1,0 +1,19 @@
+{{- $card := .card -}}
+{{- if not $card }}{{ errorf "app-kit frame needs card" }}{{ end -}}
+{{- $iconBase := "" -}}
+{{- with site.Data.apphost.iconBase }}{{ $iconBase = . }}{{ end -}}
+{{- if not $iconBase }}{{ errorf "data/apphost.json needs iconBase" }}{{ end -}}
+{{- if not (strings.HasSuffix $iconBase "/") }}{{ $iconBase = printf "%s/" $iconBase }}{{ end -}}
+<div class="app-frame" data-app-frame="{{ $card.id }}">
+  <div class="app-frame-toolbar">
+    <img class="app-frame-icon" src="{{ printf "%s%s.png" $iconBase $card.id }}" width="36" height="36" alt="">
+    {{- if .nameHref }}
+    <a class="app-frame-name" href="{{ .nameHref }}">{{ $card.name }}</a>
+    {{- else }}
+    <p class="app-frame-name">{{ $card.name }}</p>
+    {{- end }}
+    {{- with .controls }}
+    <div class="app-frame-controls">{{ . | safeHTML }}</div>
+    {{- end }}
+  </div>
+  <div class="app-frame-body">

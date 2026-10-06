@@ -30,10 +30,6 @@
       "routes": {
         "principle": "{company}/{slug}/",
         "set": "?c={company}"
-      },
-      "preview": {
-        "src": "porridge.webp",
-        "alt": "Porridge table. Columns are Situation, Under, Just Right, and Over."
       }
     },
     {
@@ -44,11 +40,7 @@
       "themes": [
         "being-principled"
       ],
-      "entry": "tenets/",
-      "preview": {
-        "src": "tenets.webp",
-        "alt": "Tenets box with buttons for Claude, ChatGPT, and Grok."
-      }
+      "entry": "tenets/"
     },
     {
       "id": "sbi",
@@ -59,11 +51,7 @@
         "people-management",
         "being-principled"
       ],
-      "entry": "sbi/",
-      "preview": {
-        "src": "sbi.webp",
-        "alt": "SBI form. Step one is the draft of what you would actually say."
-      }
+      "entry": "sbi/"
     },
     {
       "id": "biq",
@@ -73,11 +61,7 @@
       "themes": [
         "hiring"
       ],
-      "entry": "biq/",
-      "preview": {
-        "src": "biq.webp",
-        "alt": "BIQ questions for Customer Obsession."
-      }
+      "entry": "biq/"
     },
     {
       "id": "30-60-90",
@@ -97,11 +81,7 @@
       "themes": [
         "people-management"
       ],
-      "entry": "cbto/",
-      "preview": {
-        "src": "cbto.webp",
-        "alt": "CBTO rank of the four lenses, strongest at the top."
-      }
+      "entry": "cbto/"
     },
     {
       "id": "5ps",
@@ -111,25 +91,17 @@
       "themes": [
         "planning-and-change"
       ],
-      "entry": "5ps/",
-      "preview": {
-        "src": "5ps.webp",
-        "alt": "5Ps wizard on Purpose, the first of five steps."
-      }
+      "entry": "5ps/"
     },
     {
       "id": "dvfr",
-      "name": "D × V × F > R",
+      "name": "D \u00d7 V \u00d7 F > R",
       "summary": "An interactive app that scores Dissatisfaction, Vision, First steps, and Resistance for a change you name. You leave knowing whether the change can happen, and which factor is at zero. Useful when a change is stalling and you need to see why.",
       "status": "beta",
       "themes": [
         "planning-and-change"
       ],
-      "entry": "dvfr/",
-      "preview": {
-        "src": "dvfr.webp",
-        "alt": "D times V times F score bar, with Dissatisfaction, Vision, First steps, and Resistance."
-      }
+      "entry": "dvfr/"
     }
   ]
 }

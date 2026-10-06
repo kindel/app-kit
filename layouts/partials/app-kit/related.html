@@ -1,0 +1,6 @@
+{{- $label := "" -}}
+{{- with site.Data.apphost.relatedLabel }}{{ $label = . }}{{ end -}}
+{{- if not $label }}{{ errorf "data/apphost.json needs relatedLabel" }}{{ end -}}
+{{- with .posts }}
+<p class="app-related">{{ $label }} {{ range $i, $p := . }}{{ if $i }} <span aria-hidden="true">|</span> {{ end }}<a href="{{ $p.href }}">{{ $p.title }}</a>{{ end }}</p>
+{{- end }}

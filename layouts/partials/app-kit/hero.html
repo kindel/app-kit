@@ -1,0 +1,45 @@
+{{- $page := .page -}}
+{{- $card := .card -}}
+{{- if not $page }}{{ errorf "app-kit hero needs page" }}{{ end -}}
+{{- if not $card }}{{ errorf "app-kit hero needs card" }}{{ end -}}
+{{- $appBase := "" -}}
+{{- $allApps := "" -}}
+{{- with site.Data.apphost -}}
+  {{- with .appBase }}{{ $appBase = . }}{{ end -}}
+  {{- with .allApps }}{{ $allApps = . }}{{ end -}}
+{{- end -}}
+{{- if not $appBase }}{{ errorf "data/apphost.json needs appBase" }}{{ end -}}
+{{- if not $allApps }}{{ errorf "data/apphost.json needs allApps" }}{{ end -}}
+{{- if not (strings.HasSuffix $appBase "/") }}{{ $appBase = printf "%s/" $appBase }}{{ end -}}
+{{- $image := .image -}}
+{{- $title := $card.name | printf "App: %s" -}}
+{{- if isset . "title" -}}
+  {{- $title = .title -}}
+{{- end -}}
+{{- $subtitle := $card.subtitle -}}
+{{- if isset . "subtitle" -}}
+  {{- $subtitle = .subtitle -}}
+{{- end -}}
+{{- $eyebrow := .eyebrow -}}
+{{- if and (not (isset . "eyebrow")) (eq $card.status "beta") -}}
+  {{- $eyebrow = "BETA" -}}
+{{- end -}}
+{{- $bgStyle := "background-color: rgb(17, 24, 39);" -}}
+{{- if $image -}}
+  {{- $bgStyle = printf "background-image: linear-gradient(90deg, rgba(17, 24, 39, 0.94) 0%%, rgba(17, 24, 39, 0.78) 46%%, rgba(17, 24, 39, 0.25) 100%%), url('%s');" $image -}}
+{{- end -}}
+<header class="kld-subhero kld-subhero--tight" style="{{ $bgStyle | safeCSS }}">
+  {{ partial "site-navigation.html" $page }}
+  <div class="kld-subhero-inner">
+    {{- with $eyebrow }}
+    <p class="kld-eyebrow">{{ . }}</p>
+    {{- end }}
+    <h1{{ with $.titleId }} id="{{ . }}"{{ end }}>{{ $title }}</h1>
+    {{- if or $subtitle $.subtitleId }}
+    <p{{ with $.subtitleId }} id="{{ . }}"{{ end }}>{{ $subtitle }}</p>
+    {{- end }}
+    <div class="kld-hero-actions">
+      <a class="kld-button kld-button-secondary" href="{{ $appBase }}">{{ $allApps }}</a>
+    </div>
+  </div>
+</header>

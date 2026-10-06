@@ -8,8 +8,6 @@ Checks, in order:
 3. Every app id has a card.json in github.com/kindel/<id>, and the
    manifest name, summary, and status match that card. A card with no
    href must not grow an entry. A card with an href must.
-4. A published app (one with entry) has a preview whose src is a webp
-   file in previews/. An unpublished app has no preview.
 """
 
 from __future__ import annotations
@@ -138,46 +136,10 @@ def card_errors(manifest, fetch=fetch_card) -> list[str]:
     return found
 
 
-def preview_errors(manifest, root: Path = ROOT) -> list[str]:
-    found = []
-    apps = manifest.get("apps")
-    if not isinstance(apps, list):
-        return found
-    seen = set()
-    for app in apps:
-        if not isinstance(app, dict):
-            continue
-        app_id = app.get("id") if isinstance(app.get("id"), str) else "?"
-        entry = app.get("entry")
-        preview = app.get("preview")
-        published = isinstance(entry, str) and entry != ""
-        if not published:
-            if preview is not None:
-                found.append(f"{app_id}: unpublished app must not have a preview")
-            continue
-        if not isinstance(preview, dict):
-            found.append(f"{app_id}: published app needs a preview")
-            continue
-        src = preview.get("src")
-        alt = preview.get("alt")
-        if not isinstance(src, str) or "/" in src or "\\" in src or not src.endswith(".webp"):
-            found.append(f"{app_id}: preview src must be a webp file name")
-            continue
-        if src in seen:
-            found.append(f"{app_id}: preview src {src} is used more than once")
-        seen.add(src)
-        if not isinstance(alt, str) or not alt.strip():
-            found.append(f"{app_id}: preview alt must be a non-empty string")
-        if not (root / "previews" / src).is_file():
-            found.append(f"{app_id}: preview file previews/{src} is missing")
-    return found
-
-
 def validate(manifest, schema, fetch=fetch_card, root: Path = ROOT) -> list[str]:
     found = schema_errors(manifest, schema)
     found.extend(theme_errors(manifest))
     found.extend(card_errors(manifest, fetch=fetch))
-    found.extend(preview_errors(manifest, root=root))
     return found
 
 

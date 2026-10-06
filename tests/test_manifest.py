@@ -183,41 +183,18 @@ class ManifestTests(unittest.TestCase):
         errors = v.card_errors({"apps": [app]}, fetch=fetch)
         self.assertEqual(errors, ["porridge: manifest entry must be a string"])
 
-    def test_published_apps_have_preview_files(self):
+    def test_manifest_has_no_preview_field(self):
         later = [a for a in self.manifest["apps"] if a["id"] == "30-60-90"]
         self.assertEqual(len(later), 1)
-        self.assertNotIn("preview", later[0])
         self.assertNotIn("entry", later[0])
+        self.assertNotIn("preview", later[0])
         published = [a["id"] for a in self.manifest["apps"] if a.get("entry")]
         self.assertEqual(
             published,
             ["porridge", "tenets", "sbi", "biq", "cbto", "5ps", "dvfr"],
         )
-        errors = v.preview_errors(self.manifest)
-        self.assertEqual(errors, [])
-
-    def test_missing_preview_is_rejected(self):
-        manifest = {"apps": [{"id": "porridge", "entry": "porridge/"}]}
-        errors = v.preview_errors(manifest)
-        self.assertEqual(errors, ["porridge: published app needs a preview"])
-
-    def test_unpublished_preview_is_rejected(self):
-        manifest = {"apps": [{"id": "30-60-90", "preview": {"src": "x.webp", "alt": "x"}}]}
-        errors = v.preview_errors(manifest)
-        self.assertEqual(errors, ["30-60-90: unpublished app must not have a preview"])
-
-    def test_missing_preview_file_is_rejected(self):
-        manifest = {
-            "apps": [
-                {
-                    "id": "porridge",
-                    "entry": "porridge/",
-                    "preview": {"src": "missing.webp", "alt": "A screen"},
-                }
-            ]
-        }
-        errors = v.preview_errors(manifest)
-        self.assertEqual(errors, ["porridge: preview file previews/missing.webp is missing"])
+        for app in self.manifest["apps"]:
+            self.assertNotIn("preview", app)
 
 
 if __name__ == "__main__":

@@ -62,4 +62,28 @@ for (const [name, value] of Object.entries(expected)) {
   if (!tokens.includes(line)) fail("tokens.css missing " + line);
 }
 
+const launcher = fs.readFileSync(path.join(root, "launcher.js"), "utf8");
+if (!launcher.includes("event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey")) {
+  fail("launcher.js must let modified theme-chip clicks follow href");
+}
+if (!launcher.includes('event.preventDefault()')) {
+  fail("launcher.js must intercept an unmodified theme-chip click");
+}
+if (launcher.includes("apps-tile-open")) {
+  fail("launcher.js must not bind the app tile");
+}
+const chrome = fs.readFileSync(path.join(root, "chrome.css"), "utf8");
+if (chrome.includes("tools-preview") || chrome.includes("tools-steam")) {
+  fail("chrome.css still has the screenshot card");
+}
+const hero = fs.readFileSync(path.join(root, "layouts/partials/app-kit/hero.html"), "utf8");
+if (hero.includes("actionLabel") || hero.includes("actionHref")) {
+  fail("hero partial must not render an app control");
+}
+if (!hero.includes("allApps")) fail("hero partial must take All The Apps from apphost");
+const frame = fs.readFileSync(path.join(root, "layouts/partials/app-kit/frame-start.html"), "utf8");
+if (!frame.includes("app-frame-toolbar") || !frame.includes("app-frame-controls")) {
+  fail("frame partial needs a toolbar and a controls slot");
+}
+
 console.log("clients: ok");

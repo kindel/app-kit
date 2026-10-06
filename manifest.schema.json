@@ -77,21 +77,6 @@
               "minLength": 1
             }
           }
-        },
-        "preview": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["src", "alt"],
-          "properties": {
-            "src": {
-              "type": "string",
-              "pattern": "^[a-z0-9][a-z0-9.-]*\\.webp$"
-            },
-            "alt": {
-              "type": "string",
-              "minLength": 1
-            }
-          }
         }
       }
     }
