@@ -20,6 +20,9 @@ if (!feedback.includes("window.KindelFeedback")) {
 if (!feedback.includes('headers: { "Content-Type": "application/json" }')) {
   fail("feedback.js payload headers drifted");
 }
+if (!feedback.includes("resp.text()")) {
+  fail("feedback.js must accept a 2xx with an empty body");
+}
 for (const key of ["app:", "message:", "email:", "website:", "page:"]) {
   if (!feedback.includes(key)) fail("feedback.js payload missing " + key);
 }
@@ -33,6 +36,9 @@ if (!attribution.includes('var DEFAULT_TEXT = "Built on Kindel apps";')) {
 }
 if (!attribution.includes("[data-kld-attribution]")) {
   fail("attribution.js must render [data-kld-attribution]");
+}
+if (attribution.includes("data-href") || attribution.includes("opts.href")) {
+  fail("attribution href must stay https://kindel.com");
 }
 
 const tokens = fs.readFileSync(path.join(root, "tokens.css"), "utf8");

@@ -47,7 +47,7 @@ MIT derivatives link to https://kindel.com. A LICENSE file is not enough. Drop a
 <script src="/js/app-kit/attribution.js" defer></script>
 ```
 
-That renders "Built on Kindel apps" pointing at https://kindel.com. `KindelAttribution.render(element)` does the same from script.
+That renders "Built on Kindel apps" pointing at https://kindel.com. The destination is fixed. `KindelAttribution.render(element)` does the same from script.
 
 ## Tokens
 

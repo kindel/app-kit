@@ -4,14 +4,14 @@
   var DEFAULT_HREF = "https://kindel.com";
   var DEFAULT_TEXT = "Built on Kindel apps";
 
-  function render(target, opts) {
-    opts = opts || {};
+  function render(target) {
     var el = typeof target === "string" ? document.querySelector(target) : target;
     if (!el || el.querySelector(".kld-attribution-link")) return null;
     var link = document.createElement("a");
     link.className = "kld-attribution-link";
-    link.href = opts.href || el.getAttribute("data-href") || DEFAULT_HREF;
-    link.textContent = opts.text || el.getAttribute("data-text") || DEFAULT_TEXT;
+    // The MIT terms require this exact destination. Hosts cannot retarget it.
+    link.href = DEFAULT_HREF;
+    link.textContent = DEFAULT_TEXT;
     el.classList.add("kld-attribution");
     el.appendChild(link);
     return link;

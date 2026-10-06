@@ -86,12 +86,16 @@
           body: JSON.stringify(payload)
         })
           .then(function (resp) {
-            if (!resp.ok) {
-              return resp.json().then(function (data) {
-                throw new Error(data.error || "Could not send feedback.");
-              });
-            }
-            return resp.json();
+            return resp.text().then(function (text) {
+              var data = {};
+              if (text) {
+                try { data = JSON.parse(text); } catch (e) { data = {}; }
+              }
+              if (!resp.ok) {
+                throw new Error((data && data.error) || "Could not send feedback.");
+              }
+              return data;
+            });
           })
           .then(function () {
             if (statusEl) {
