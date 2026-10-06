@@ -1,0 +1,21 @@
+# Hugo module mounts. A host that imports this module without its own
+# mounts gets these. kindelwww sets the same targets on the import.
+
+[module]
+  [module.hugoVersion]
+    min = "0.143.1"
+  [[module.mounts]]
+    source = "manifest.json"
+    target = "data/appkit/manifest.json"
+  [[module.mounts]]
+    source = "feedback.js"
+    target = "static/js/app-kit/feedback.js"
+  [[module.mounts]]
+    source = "attribution.js"
+    target = "static/js/app-kit/attribution.js"
+  [[module.mounts]]
+    source = "attribution.css"
+    target = "static/css/app-kit/attribution.css"
+  [[module.mounts]]
+    source = "tokens.css"
+    target = "static/css/app-kit/tokens.css"

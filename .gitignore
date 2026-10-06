@@ -1,0 +1,5 @@
+.hugo_cache/
+public/
+resources/
+__pycache__/
+.venv/

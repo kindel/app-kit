@@ -1,0 +1,107 @@
+{
+  "themes": [
+    {
+      "id": "being-principled",
+      "label": "Being Principled"
+    },
+    {
+      "id": "hiring",
+      "label": "Hiring"
+    },
+    {
+      "id": "people-management",
+      "label": "People Management"
+    },
+    {
+      "id": "planning-and-change",
+      "label": "Planning and Change"
+    }
+  ],
+  "apps": [
+    {
+      "id": "porridge",
+      "name": "Porridge",
+      "summary": "An interactive app that walks a principle as Just Right, Over, or Under. You leave knowing how you, or someone you work with, are living it, and which way it missed. Useful when you are studying how to get better at living a principle, or coaching someone else to do the same.",
+      "status": "beta",
+      "themes": [
+        "being-principled"
+      ],
+      "entry": "porridge/",
+      "routes": {
+        "principle": "{company}/{slug}/",
+        "set": "?c={company}"
+      }
+    },
+    {
+      "id": "tenets",
+      "name": "Tenets",
+      "summary": "An interactive app that takes the endeavor you type and opens Claude, ChatGPT, or Grok with a prompt that will write and pressure-test the tenets. You leave with an agent already briefed, not a blank chat. Useful when you need tenets and do not want to start from slogans.",
+      "status": "beta",
+      "themes": [
+        "being-principled"
+      ],
+      "entry": "tenets/"
+    },
+    {
+      "id": "sbi",
+      "name": "SBI",
+      "summary": "An interactive app that structures feedback as Situation, Behavior, and Impact. You leave with words about what happened, not who they are. Useful when you owe someone feedback and the draft is still about the person.",
+      "status": "live",
+      "themes": [
+        "people-management",
+        "being-principled"
+      ],
+      "entry": "sbi/"
+    },
+    {
+      "id": "biq",
+      "name": "BIQ",
+      "summary": "An interactive app that lets you pick a principle, get example questions, and compare hire and no-hire answers at Junior, Senior, and Exec. You leave ready to run the interview. Useful when you are writing a loop or prepping for one.",
+      "status": "live",
+      "themes": [
+        "hiring"
+      ],
+      "entry": "biq/"
+    },
+    {
+      "id": "30-60-90",
+      "name": "30-60-90",
+      "summary": "An interactive app that writes a 30-60-90 plan document on the CBTO grid: dated horizons and inspectable evaluation criteria. You leave with a spreadsheet and a readable plan, not a welcome-kit checklist. Useful when the offer is out and the first quarter is still a vibe.",
+      "status": "later",
+      "themes": [
+        "hiring",
+        "people-management"
+      ]
+    },
+    {
+      "id": "cbto",
+      "name": "CBTO",
+      "summary": "An interactive app that walks the CBTO stack rank: current strengths, where you should put energy next, and what the role actually needs. You leave knowing your superpowers, your growth edge, and whether those match. Useful when you are picking a next role, hiring a leader, or the team is overweight on one lens.",
+      "status": "live",
+      "themes": [
+        "people-management"
+      ],
+      "entry": "cbto/"
+    },
+    {
+      "id": "5ps",
+      "name": "5Ps",
+      "summary": "An interactive app that walks Purpose, Principles, Priorities, People, and Plan so you can open Claude, ChatGPT, or Grok with a prompt that will write the plan. You leave with an agent already briefed, not starting from a vibe. Useful when the endeavor needs a 5Ps and you want the first draft in minutes.",
+      "status": "beta",
+      "themes": [
+        "planning-and-change"
+      ],
+      "entry": "5ps/"
+    },
+    {
+      "id": "dvfr",
+      "name": "D × V × F > R",
+      "summary": "An interactive app that scores Dissatisfaction, Vision, First steps, and Resistance for a change you name. You leave knowing whether the change can happen, and which factor is at zero. Useful when a change is stalling and you need to see why.",
+      "status": "beta",
+      "themes": [
+        "planning-and-change"
+      ],
+      "entry": "dvfr/"
+    }
+  ]
+}
