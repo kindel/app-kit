@@ -1,0 +1,16 @@
+/* --kld-* custom properties from kindelwww static/css/custom.css (:root). */
+:root {
+    --kld-ink: #17202b;
+    --kld-muted: #59636f;
+    --kld-line: #d8dee4;
+    --kld-paper: #ffffff;
+    --kld-wash: #f4f6f3;
+    --kld-sage: #dce7dc;
+    --kld-blue: #24445f;
+    --kld-rust: #b5532f;
+    --kld-rust-dark: #883a22;
+    --kld-title-size: 3rem;
+    --kld-title-gap: calc(var(--kld-title-size) * 2);
+    --kld-title-above-actions: calc(var(--kld-title-size) * 2);
+    --kld-coast-position: right 18%;
+}

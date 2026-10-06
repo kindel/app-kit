@@ -1,0 +1,17 @@
+.kld-attribution {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--kld-muted, #59636f);
+}
+
+.kld-attribution-link {
+  color: var(--kld-rust-dark, #883a22);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.kld-attribution-link:hover {
+  color: var(--kld-blue, #24445f);
+  text-decoration: underline;
+}
