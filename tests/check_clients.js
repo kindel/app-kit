@@ -94,9 +94,21 @@ if (hero.includes("actionLabel") || hero.includes("actionHref")) {
   fail("hero partial must not render an app control");
 }
 if (!hero.includes("allApps")) fail("hero partial must take All The Apps from apphost");
+if (hero.includes("<h1") || hero.includes("kld-eyebrow")) {
+  fail("hero partial must stay a navbar bar, without a page heading");
+}
+if (!hero.includes("appkitHeading")) {
+  fail("hero partial must stash an explicit title for the frame");
+}
 const frame = fs.readFileSync(path.join(root, "layouts/partials/app-kit/frame-start.html"), "utf8");
 if (!frame.includes("app-frame-toolbar") || !frame.includes("app-frame-controls")) {
   fail("frame partial needs a toolbar and a controls slot");
+}
+if (!frame.includes("app-frame-title") || !frame.includes("<h1")) {
+  fail("frame partial must render the page h1");
+}
+if (!frame.includes("appkitHeading")) {
+  fail("frame partial must read the title the hero stashed");
 }
 
 console.log("clients: ok");

@@ -4,13 +4,39 @@
 {{- with site.Data.apphost.iconBase }}{{ $iconBase = . }}{{ end -}}
 {{- if not $iconBase }}{{ errorf "data/apphost.json needs iconBase" }}{{ end -}}
 {{- if not (strings.HasSuffix $iconBase "/") }}{{ $iconBase = printf "%s/" $iconBase }}{{ end -}}
+{{- $explicit := false -}}
+{{- $headingTitle := "" -}}
+{{- $headingId := "" -}}
+{{- $headingSub := "" -}}
+{{- $headingSubId := "" -}}
+{{- with .page -}}
+  {{- with .Store.Get "appkitHeading" -}}
+    {{- if index . "explicit" }}{{ $explicit = true }}{{ end -}}
+    {{- with index . "title" }}{{ $headingTitle = . }}{{ end -}}
+    {{- with index . "titleId" }}{{ $headingId = . }}{{ end -}}
+    {{- with index . "subtitle" }}{{ $headingSub = . }}{{ end -}}
+    {{- with index . "subtitleId" }}{{ $headingSubId = . }}{{ end -}}
+  {{- end -}}
+{{- end -}}
 <div class="app-frame" data-app-frame="{{ $card.id }}">
+  {{- if $explicit }}
+  <div class="app-frame-heading">
+    <h1 class="app-frame-title"{{ with $headingId }} id="{{ . }}"{{ end }}>{{ $headingTitle }}</h1>
+    {{- if or $headingSub $headingSubId }}
+    <p class="app-frame-lede"{{ with $headingSubId }} id="{{ . }}"{{ end }}>{{ $headingSub | safeHTML }}</p>
+    {{- end }}
+  </div>
+  {{- end }}
   <div class="app-frame-toolbar">
     <img class="app-frame-icon" src="{{ printf "%s%s.png" $iconBase $card.id }}" width="36" height="36" alt="">
-    {{- if .nameHref }}
-    <a class="app-frame-name" href="{{ .nameHref }}">{{ $card.name }}</a>
+    {{- if $explicit }}
+      {{- if .nameHref }}
+      <a class="app-frame-name" href="{{ .nameHref }}">{{ $card.name }}</a>
+      {{- else }}
+      <p class="app-frame-name">{{ $card.name }}</p>
+      {{- end }}
     {{- else }}
-    <p class="app-frame-name">{{ $card.name }}</p>
+    <h1 class="app-frame-name">{{ if .nameHref }}<a href="{{ .nameHref }}">{{ $card.name }}</a>{{ else }}{{ $card.name }}{{ end }}</h1>
     {{- end }}
     {{- with .controls }}
     <div class="app-frame-controls">{{ . | safeHTML }}</div>

@@ -394,6 +394,44 @@ a.apps-tile-open:focus-visible .apps-tile-icon,
     color: var(--kld-line);
 }
 
+/* Slim site bar: navbar, and All The Apps on an app page. No hero image. */
+.kld-appbar {
+    background-color: #111827;
+    background-image: none;
+    color: #ffffff;
+}
+
+.kld-appbar-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.35rem 0.75rem;
+}
+
+.kld-appbar-row > nav {
+    flex: 1 1 16rem;
+    min-width: 0;
+}
+
+.kld-appbar .kld-hero-actions {
+    margin: 0;
+    padding: 0 1rem 0.65rem;
+}
+
+@media (min-width: 860px) {
+    .kld-appbar .kld-hero-actions {
+        padding: 0 1.25rem 0 0;
+    }
+}
+
+.kld-appbar .kld-button {
+    width: auto;
+    min-height: 2.2rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.92rem;
+}
+
 .app-frame {
     box-sizing: border-box;
     width: 100%;
@@ -405,6 +443,37 @@ a.apps-tile-open:focus-visible .apps-tile-icon,
     overflow: hidden;
 }
 
+.app-frame-heading {
+    padding: 0.95rem 1.1rem 0.15rem;
+}
+
+.app-frame-title {
+    margin: 0;
+    color: var(--kld-ink);
+    font-family: Inter, Arial, Helvetica, sans-serif;
+    font-size: 1.55rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.app-frame-lede {
+    margin: 0.4rem 0 0;
+    color: var(--kld-muted);
+    font-size: 0.98rem;
+    line-height: 1.5;
+}
+
+.app-frame-lede a {
+    color: var(--kld-rust-dark);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.app-frame-lede a:hover {
+    color: var(--kld-blue);
+    text-decoration: underline;
+}
+
 .app-frame-toolbar {
     display: flex;
     align-items: center;
@@ -412,6 +481,16 @@ a.apps-tile-open:focus-visible .apps-tile-icon,
     padding: 0.7rem 0.9rem;
     border-bottom: 1px solid var(--kld-line);
     background: var(--kld-wash);
+}
+
+h1.app-frame-name {
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+h1.app-frame-name a {
+    color: inherit;
+    text-decoration: none;
 }
 
 .app-frame-icon {
