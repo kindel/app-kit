@@ -32,7 +32,7 @@ Partials live under `layouts/partials/app-kit/`. A host that already has `site-n
 
 Words and host paths (`appBase`, `allApps`, `iconBase`, chip label, feedback sentences, sheet labels) come from the host's `data/apphost.json`, not from these partials. Each app still ships its own `icon.png`. The host mounts that file where `iconBase` points (kindel.com uses `/images/tools/`).
 
-`launcher.js` keeps unmodified primary clicks on a theme chip in the page, and lets Ctrl, Cmd, Shift, and Alt clicks follow the chip href. The app tile is a normal link, so those modified clicks open it in a new tab with no script involved. The info button is a separate control, `aria-label` "About" plus the app name.
+`launcher.js` keeps unmodified primary clicks on a theme chip in the page, and lets Ctrl, Cmd, Shift, and Alt clicks follow the chip href. The chips are one segmented category bar. The selected category is paper on the wash tray, and the icons sit on a wash board with the name centered under each icon. The app tile is a normal link, so those modified clicks open it in a new tab with no script involved. The info button is a separate control, `aria-label` "About" plus the app name.
 
 ## Feedback
 
