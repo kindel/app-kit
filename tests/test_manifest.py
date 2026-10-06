@@ -183,6 +183,19 @@ class ManifestTests(unittest.TestCase):
         errors = v.card_errors({"apps": [app]}, fetch=fetch)
         self.assertEqual(errors, ["porridge: manifest entry must be a string"])
 
+    def test_manifest_has_no_preview_field(self):
+        later = [a for a in self.manifest["apps"] if a["id"] == "30-60-90"]
+        self.assertEqual(len(later), 1)
+        self.assertNotIn("entry", later[0])
+        self.assertNotIn("preview", later[0])
+        published = [a["id"] for a in self.manifest["apps"] if a.get("entry")]
+        self.assertEqual(
+            published,
+            ["porridge", "tenets", "sbi", "biq", "cbto", "5ps", "dvfr"],
+        )
+        for app in self.manifest["apps"]:
+            self.assertNotIn("preview", app)
+
 
 if __name__ == "__main__":
     unittest.main()

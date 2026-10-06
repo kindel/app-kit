@@ -19,3 +19,12 @@
   [[module.mounts]]
     source = "tokens.css"
     target = "static/css/app-kit/tokens.css"
+  [[module.mounts]]
+    source = "chrome.css"
+    target = "static/css/app-kit/chrome.css"
+  [[module.mounts]]
+    source = "launcher.js"
+    target = "static/js/app-kit/launcher.js"
+  [[module.mounts]]
+    source = "layouts"
+    target = "layouts"

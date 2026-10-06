@@ -29,4 +29,5 @@ jobs:
           .venv/bin/python -m unittest discover -s tests -v
           node --check feedback.js
           node --check attribution.js
+          node --check launcher.js
           node tests/check_clients.js

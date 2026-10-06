@@ -136,7 +136,7 @@ def card_errors(manifest, fetch=fetch_card) -> list[str]:
     return found
 
 
-def validate(manifest, schema, fetch=fetch_card) -> list[str]:
+def validate(manifest, schema, fetch=fetch_card, root: Path = ROOT) -> list[str]:
     found = schema_errors(manifest, schema)
     found.extend(theme_errors(manifest))
     found.extend(card_errors(manifest, fetch=fetch))

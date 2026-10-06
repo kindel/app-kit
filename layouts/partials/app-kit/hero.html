@@ -1,0 +1,40 @@
+{{- $page := .page -}}
+{{- if not $page }}{{ errorf "app-kit hero needs page" }}{{ end -}}
+{{- $catalog := .catalog -}}
+{{- $card := .card -}}
+{{- if and (not $catalog) (not $card) }}{{ errorf "app-kit hero needs card" }}{{ end -}}
+{{- $appBase := "" -}}
+{{- $allApps := "" -}}
+{{- if not $catalog -}}
+  {{- with site.Data.apphost -}}
+    {{- with .appBase }}{{ $appBase = . }}{{ end -}}
+    {{- with .allApps }}{{ $allApps = . }}{{ end -}}
+  {{- end -}}
+  {{- if not $appBase }}{{ errorf "data/apphost.json needs appBase" }}{{ end -}}
+  {{- if not $allApps }}{{ errorf "data/apphost.json needs allApps" }}{{ end -}}
+  {{- if not (strings.HasSuffix $appBase "/") }}{{ $appBase = printf "%s/" $appBase }}{{ end -}}
+  {{- /* The frame renders the h1. Stash a caller-supplied title here so the header stays a bar. */ -}}
+  {{- $explicitTitle := isset . "title" -}}
+  {{- $title := "" -}}
+  {{- if $explicitTitle }}{{ $title = .title }}{{ end -}}
+  {{- $explicitSubtitle := isset . "subtitle" -}}
+  {{- $subtitle := "" -}}
+  {{- if $explicitSubtitle }}{{ $subtitle = .subtitle }}{{ end -}}
+  {{- $page.Store.Set "appkitHeading" (dict
+      "explicit" $explicitTitle
+      "title" $title
+      "titleId" (.titleId | default "")
+      "subtitle" $subtitle
+      "subtitleId" (cond $explicitSubtitle (.subtitleId | default "") "")
+    ) -}}
+{{- end -}}
+<header class="kld-subhero kld-appbar">
+  <div class="kld-appbar-row">
+    {{ partial "site-navigation.html" $page }}
+    {{- if not $catalog }}
+    <div class="kld-hero-actions">
+      <a class="kld-button kld-button-secondary" href="{{ $appBase }}">{{ $allApps }}</a>
+    </div>
+    {{- end }}
+  </div>
+</header>

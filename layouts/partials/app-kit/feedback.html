@@ -1,0 +1,38 @@
+{{- $app := .app -}}
+{{- $repo := .repo -}}
+{{- $host := site.Data.apphost -}}
+{{- $toggle := "" -}}
+{{- $lead := "" -}}
+{{- $email := "" -}}
+{{- $placeholder := "" -}}
+{{- $send := "" -}}
+{{- $cancel := "" -}}
+{{- with $host -}}
+  {{- with .feedbackToggle }}{{ $toggle = . }}{{ end -}}
+  {{- with .feedbackLead }}{{ $lead = . }}{{ end -}}
+  {{- with .feedbackEmail }}{{ $email = . }}{{ end -}}
+  {{- with .feedbackEmailPlaceholder }}{{ $placeholder = . }}{{ end -}}
+  {{- with .feedbackSend }}{{ $send = . }}{{ end -}}
+  {{- with .feedbackCancel }}{{ $cancel = . }}{{ end -}}
+{{- end -}}
+{{- if or (not $toggle) (not $lead) (not $email) (not $placeholder) (not $send) (not $cancel) -}}
+  {{- errorf "data/apphost.json is missing feedback copy" -}}
+{{- end -}}
+<div class="app-feedback-section">
+  <button type="button" class="kld-button kld-button-outline app-feedback-toggle" data-app="{{ $app }}">{{ $toggle }}</button>
+  <div class="app-feedback-form" hidden>
+    <form class="app-feedback-form-inner" data-app="{{ $app }}">
+      <label class="app-feedback-label" for="app-feedback-message-{{ $app }}">{{ $lead }} <a href="{{ $repo }}" target="_blank" rel="noopener">{{ $repo }}</a>.</label>
+      <textarea id="app-feedback-message-{{ $app }}" name="message" class="app-feedback-message" required rows="4"></textarea>
+      <label class="app-feedback-label" for="app-feedback-email-{{ $app }}">{{ $email }}</label>
+      <input type="email" id="app-feedback-email-{{ $app }}" name="email" class="app-feedback-email" placeholder="{{ $placeholder }}">
+      <input type="text" name="website" class="app-feedback-honeypot" tabindex="-1" autocomplete="off">
+      <div class="app-feedback-actions">
+        <button type="submit" class="kld-button kld-button-primary app-feedback-submit">{{ $send }}</button>
+        <button type="button" class="kld-button kld-button-secondary app-feedback-cancel">{{ $cancel }}</button>
+      </div>
+      <p class="app-feedback-status" hidden></p>
+    </form>
+  </div>
+</div>
+<script src="{{ "js/app-kit/feedback.js" | relURL }}" defer></script>

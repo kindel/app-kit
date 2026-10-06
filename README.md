@@ -1,8 +1,6 @@
 # app-kit
 
-Shared files for Kindel apps, so a host other than kindel.com can mount the same manifest, feedback client, attribution link, and brand tokens.
-
-The page shell stays with the host. This repo does not ship Hugo layouts for an app.
+Shared files for Kindel apps, so a host other than kindel.com can mount the same manifest, feedback client, attribution link, brand tokens, and app chrome.
 
 ## Files
 
@@ -11,14 +9,30 @@ The page shell stays with the host. This repo does not ship Hugo layouts for an 
 | `manifest.json` | Apps, theme list, entry paths, and route templates. |
 | `manifest.schema.json` | Schema for that file. |
 | `feedback.js` | Feedback form client. |
+| `layouts/partials/app-kit/feedback.html` | Give Feedback on this App markup. |
 | `attribution.js` | Renders the required attribution link. |
 | `attribution.css` | Styles for that link. |
 | `tokens.css` | `--kld-*` custom properties. |
+| `chrome.css` | Launcher, app frame, feedback, and related-essay styles. |
+| `launcher.js` | Theme chips, the desktop detail pane, and the mobile sheet. |
+| `layouts/partials/app-kit/` | Hero, frame, launcher, summary, related essays, feedback. |
 | `hugo.toml` | Mounts the files when this repo is a Hugo module. |
 
-Names and summaries in `manifest.json` are copied from each app's `card.json` (`github.com/kindel/<id>`). Do not invent them. `30-60-90` is not published: status `later`, no `entry`.
+Names and summaries in `manifest.json` are copied from each app's `card.json` (`github.com/kindel/<id>`). Do not invent them. `30-60-90` is not published: status `later`, and no `entry`.
 
 Theme labels, in chip order: Being Principled, Hiring, People Management, Planning and Change. Tig can still change the names and the order.
+
+## Page chrome
+
+Partials live under `layouts/partials/app-kit/`. A host that already has `site-navigation` can call `app-kit/hero.html` for the slim dark bar: the site navbar, plus All The Apps. Pass `catalog` true on the apps catalog so the bar is the navbar only. The hero does not take app controls, and it does not render a kicker, title, subtitle, or hero image.
+
+`app-kit/frame-start.html` opens the app surface and its toolbar (icon, name, optional controls). Pass `page` as well as `card` so the frame can read a title the hero stashed. When the hero call set `title`, that title is the page's one `h1` at the top of the frame, and an explicit `subtitle` sits under it. Otherwise the toolbar name is the `h1`. When `card.status` is `beta`, the toolbar shows the host's `statusBeta` label beside the name. Live and later apps do not. `app-kit/frame-end.html` closes the frame. Optional `nameHref` makes the name a link. Optional `controls` is HTML for that app's own toolbar controls.
+
+`app-kit/summary.html` prints the card summary. `app-kit/related.html` prints the card's related essays. `app-kit/feedback.html` is the footer form. `app-kit/launcher.html` is the icon grid. Call it from the catalog shortcode with the shortcode context.
+
+Words and host paths (`appBase`, `allApps`, `iconBase`, chip label, feedback sentences, sheet labels) come from the host's `data/apphost.json`, not from these partials. Each app still ships its own `icon.png`. The host mounts that file where `iconBase` points (kindel.com uses `/images/tools/`).
+
+`launcher.js` keeps unmodified primary clicks on a theme chip in the page, and lets Ctrl, Cmd, Shift, and Alt clicks follow the chip href. The chips are one segmented category bar. The selected category is paper on the wash tray, and the icons sit on a wash board with the name centered under each icon. The app tile is a normal link, so those modified clicks open it in a new tab with no script involved. The info button is a separate control, `aria-label` "About" plus the app name. On a wide screen with a fine pointer that can hover, that button is hidden: pointing at an icon, or focusing it, fills the pane. A coarse pointer, or a screen that cannot hover, keeps the button. The pane reserves the height of the tallest details, so moving between apps does not move the footer.
 
 ## Feedback
 
@@ -65,8 +79,11 @@ With no mounts of your own, `hugo.toml` in this repo places the files at:
 - `data/appkit/manifest.json`
 - `static/js/app-kit/feedback.js`
 - `static/js/app-kit/attribution.js`
+- `static/js/app-kit/launcher.js`
 - `static/css/app-kit/attribution.css`
 - `static/css/app-kit/tokens.css`
+- `static/css/app-kit/chrome.css`
+- `layouts/partials/app-kit/` (hero, frame, launcher, feedback, related essays)
 
 A host that sets mounts on the import replaces those. Point them at the same targets, or the files will not land.
 
@@ -80,6 +97,7 @@ Plain files are also on jsDelivr once they are on the default branch, for exampl
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 .venv/bin/python -m unittest discover -s tests -v
+node --check launcher.js
 node tests/check_clients.js
 ```
 

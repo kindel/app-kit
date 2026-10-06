@@ -62,4 +62,67 @@ for (const [name, value] of Object.entries(expected)) {
   if (!tokens.includes(line)) fail("tokens.css missing " + line);
 }
 
+const launcher = fs.readFileSync(path.join(root, "launcher.js"), "utf8");
+if (!launcher.includes("event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey")) {
+  fail("launcher.js must let modified theme-chip clicks follow href");
+}
+if (!launcher.includes('event.preventDefault()')) {
+  fail("launcher.js must intercept an unmodified theme-chip click");
+}
+if (launcher.includes("apps-tile-open")) {
+  fail("launcher.js must not bind the app tile");
+}
+if (!launcher.includes("minHeight")) {
+  fail("launcher.js must reserve a stable pane height");
+}
+if (!launcher.includes("data-tile-focus")) {
+  fail("launcher.js must keep a coming-soon tile focusable when the info glyph is hidden");
+}
+const launcherHtml = fs.readFileSync(path.join(root, "layouts/partials/app-kit/launcher.html"), "utf8");
+if (!launcherHtml.includes("data-tile-focus")) {
+  fail("launcher tile for an unpublished app must be focusable");
+}
+const chrome = fs.readFileSync(path.join(root, "chrome.css"), "utf8");
+if (chrome.includes("tools-preview") || chrome.includes("tools-steam")) {
+  fail("chrome.css still has the screenshot card");
+}
+if (!chrome.includes("(min-width: 860px) and (hover: hover) and (pointer: fine)")) {
+  fail("chrome.css must hide the info glyph only for a fine pointer that can hover");
+}
+const hero = fs.readFileSync(path.join(root, "layouts/partials/app-kit/hero.html"), "utf8");
+if (hero.includes("actionLabel") || hero.includes("actionHref")) {
+  fail("hero partial must not render an app control");
+}
+if (!hero.includes("allApps")) fail("hero partial must take All The Apps from apphost");
+if (hero.includes("<h1") || hero.includes("kld-eyebrow")) {
+  fail("hero partial must stay a navbar bar, without a page heading");
+}
+if (!hero.includes("appkitHeading")) {
+  fail("hero partial must stash an explicit title for the frame");
+}
+const frame = fs.readFileSync(path.join(root, "layouts/partials/app-kit/frame-start.html"), "utf8");
+if (!frame.includes("app-frame-toolbar") || !frame.includes("app-frame-controls")) {
+  fail("frame partial needs a toolbar and a controls slot");
+}
+if (!frame.includes("app-frame-title") || !frame.includes("<h1")) {
+  fail("frame partial must render the page h1");
+}
+if (!frame.includes("appkitHeading")) {
+  fail("frame partial must read the title the hero stashed");
+}
+if (!frame.includes('eq $card.status "beta"') || !frame.includes("statusBeta") || !frame.includes("app-frame-beta")) {
+  fail("frame badge must follow card status beta and the host Beta label");
+}
+if (frame.includes(">Beta<") || frame.includes('"Beta"') || frame.includes("tenets") || frame.includes("porridge")) {
+  fail("frame badge must not hard-code the word or the app list");
+}
+const renderAt = frame.lastIndexOf('eq $card.status "beta"');
+const branch = frame.slice(renderAt, frame.indexOf("end", renderAt));
+if (!branch.includes("app-frame-beta") || !branch.includes("$statusBeta")) {
+  fail("Beta badge must be rendered only in the beta status branch");
+}
+if (!chrome.includes(".app-frame-beta")) {
+  fail("chrome.css needs the Beta badge");
+}
+
 console.log("clients: ok");

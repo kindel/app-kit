@@ -1,0 +1,140 @@
+{{- $manifest := index .Site.Data "appkit" "manifest" -}}
+{{- if not $manifest -}}
+  {{- errorf "app-kit manifest is not mounted at data/appkit/manifest.json" -}}
+{{- end -}}
+{{- $host := .Site.Data.apphost -}}
+{{- if not $host }}{{ errorf "data/apphost.json is missing" }}{{ end -}}
+{{- $appBase := $host.appBase -}}
+{{- $allLabel := $host.allChip -}}
+{{- $iconBase := $host.iconBase -}}
+{{- $aboutPrefix := $host.aboutPrefix -}}
+{{- $comingSoon := $host.comingSoon -}}
+{{- $statusLive := $host.statusLive -}}
+{{- $statusBeta := $host.statusBeta -}}
+{{- $themesLabel := $host.themesLabel -}}
+{{- $paneEmpty := $host.paneEmpty -}}
+{{- $closeLabel := $host.closeLabel -}}
+{{- $sheetLabel := $host.sheetLabel -}}
+{{- if or (not $appBase) (not $allLabel) (not $iconBase) (not $aboutPrefix) (not $comingSoon) (not $statusLive) (not $statusBeta) (not $themesLabel) (not $paneEmpty) (not $closeLabel) (not $sheetLabel) -}}
+  {{- errorf "data/apphost.json is missing launcher copy" -}}
+{{- end -}}
+{{- if not (strings.HasSuffix $appBase "/") }}{{ $appBase = printf "%s/" $appBase }}{{ end -}}
+{{- if not (strings.HasSuffix $iconBase "/") }}{{ $iconBase = printf "%s/" $iconBase }}{{ end -}}
+{{- $themes := $manifest.themes -}}
+{{- $labelByID := dict -}}
+{{- $appsByID := dict -}}
+{{- range $themes -}}
+  {{- $labelByID = merge $labelByID (dict .id .label) -}}
+{{- end -}}
+{{- range $manifest.apps -}}
+  {{- $appsByID = merge $appsByID (dict .id .) -}}
+{{- end -}}
+{{- $page := .Page.RelPermalink -}}
+<div class="apps-launcher" data-apps-catalog>
+  <div class="apps-theme-chips" role="group" aria-label="{{ $themesLabel }}">
+    <a class="apps-theme-chip is-active" href="{{ $page }}" data-theme-chip="" aria-current="true">{{ $allLabel }}</a>
+    {{- range $themes }}
+    <a class="apps-theme-chip" href="{{ $page }}?theme={{ .id }}" data-theme-chip="{{ .id }}">{{ .label }}</a>
+    {{- end }}
+  </div>
+  <div class="apps-launcher-layout">
+    <div class="apps-launcher-grid">
+      {{- range sort .Site.Data.tools "name" }}
+      {{- $card := . -}}
+      {{- $info := index $appsByID $card.id -}}
+      {{- $themeIDs := slice -}}
+      {{- $themeLabels := slice -}}
+      {{- with $info -}}
+        {{- range .themes -}}
+          {{- $tid := . -}}
+          {{- with index $labelByID $tid -}}
+            {{- $themeIDs = $themeIDs | append $tid -}}
+            {{- $themeLabels = $themeLabels | append . -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+      {{- $href := "" -}}
+      {{- if $info -}}
+        {{- with $info.entry -}}
+          {{- $b := $appBase -}}
+          {{- if not (strings.HasSuffix $b "/") }}{{ $b = printf "%s/" $b }}{{ end -}}
+          {{- $e := . -}}
+          {{- if strings.HasPrefix $e "/" }}{{ $e = strings.TrimPrefix "/" $e }}{{ end -}}
+          {{- $href = printf "%s%s" $b $e -}}
+        {{- end -}}
+      {{- else -}}
+        {{- with $card.href }}{{ $href = . }}{{ end -}}
+      {{- end -}}
+      {{- $statusLabel := $card.status | title -}}
+      {{- if eq $card.status "live" }}{{ $statusLabel = $statusLive }}{{ else if eq $card.status "beta" }}{{ $statusLabel = $statusBeta }}{{ else if or (eq $card.status "later") (eq $card.status "coming soon") (eq $card.status "coming-soon") }}{{ $statusLabel = $comingSoon }}{{ end -}}
+      {{- $aboutLabel := printf "%s %s" $aboutPrefix $card.name -}}
+      {{- $themeAttr := delimit $themeIDs " " -}}
+      <div class="apps-tile{{ if not $href }} is-later{{ end }}" data-app-card data-app-id="{{ $card.id }}" data-themes="{{ $themeAttr }}">
+        {{- if $href }}
+        <a class="apps-tile-open" href="{{ $href }}">
+        {{- else }}
+        <div class="apps-tile-open" data-tile-focus aria-label="{{ $aboutLabel }}">
+        {{- end }}
+          <img class="apps-tile-icon" src="{{ printf "%s%s.png" $iconBase $card.id }}" width="88" height="88" alt="">
+          <span class="apps-tile-name">{{ $card.name }}</span>
+          {{- if not $href }}
+          <span class="apps-tile-soon">{{ $comingSoon }}</span>
+          {{- end }}
+        {{- if $href }}
+        </a>
+        {{- else }}
+        </div>
+        {{- end }}
+        <button type="button" class="apps-tile-about" data-about="{{ $card.id }}" aria-label="{{ $aboutLabel }}" aria-expanded="false" aria-controls="apps-launcher-pane">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" focusable="false">
+            <circle cx="10" cy="10" r="7.25" fill="none" stroke="currentColor" stroke-width="1.6"></circle>
+            <circle cx="10" cy="6.35" r="0.95" fill="currentColor"></circle>
+            <path d="M10 9.15v5.1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+          </svg>
+        </button>
+      </div>
+      {{- end }}
+    </div>
+    <aside class="apps-launcher-pane" id="apps-launcher-pane" data-launcher-pane aria-live="polite">
+      <p class="apps-launcher-pane-empty" data-launcher-empty>{{ $paneEmpty }}</p>
+      <div class="apps-launcher-pane-body" data-launcher-pane-body hidden tabindex="-1"></div>
+    </aside>
+  </div>
+  <div class="apps-launcher-templates" hidden>
+    {{- range sort .Site.Data.tools "name" }}
+    {{- $card := . -}}
+    {{- $info := index $appsByID $card.id -}}
+    {{- $themeLabels := slice -}}
+    {{- with $info -}}
+      {{- range .themes -}}
+        {{- $tid := . -}}
+        {{- with index $labelByID $tid -}}
+          {{- $themeLabels = $themeLabels | append . -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $statusLabel := $card.status | title -}}
+    {{- if eq $card.status "live" }}{{ $statusLabel = $statusLive }}{{ else if eq $card.status "beta" }}{{ $statusLabel = $statusBeta }}{{ else if or (eq $card.status "later") (eq $card.status "coming soon") (eq $card.status "coming-soon") }}{{ $statusLabel = $comingSoon }}{{ end -}}
+    <template data-about-for="{{ $card.id }}">
+      <div class="apps-detail">
+        <h3 class="apps-detail-name">{{ $card.name }}</h3>
+        <p class="apps-detail-status is-{{ $card.status }}">{{ $statusLabel }}</p>
+        {{- if $themeLabels }}
+        <p class="apps-detail-themes">
+          {{- range $themeLabels }}<span class="apps-detail-theme">{{ . }}</span>{{ end }}
+        </p>
+        {{- end }}
+        <p class="apps-detail-summary">{{ $card.summary }}</p>
+        {{ partial "app-kit/related.html" $card }}
+      </div>
+    </template>
+    {{- end }}
+  </div>
+  <dialog class="apps-launcher-sheet" id="apps-launcher-sheet" data-launcher-sheet aria-label="{{ $sheetLabel }}">
+    <div class="apps-launcher-sheet-bar">
+      <button type="button" class="apps-launcher-sheet-close" data-launcher-close>{{ $closeLabel }}</button>
+    </div>
+    <div class="apps-launcher-sheet-body" data-launcher-sheet-body></div>
+  </dialog>
+</div>
+<script src="{{ "js/app-kit/launcher.js" | relURL }}" defer></script>

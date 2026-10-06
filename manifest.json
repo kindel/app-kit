@@ -95,7 +95,7 @@
     },
     {
       "id": "dvfr",
-      "name": "D × V × F > R",
+      "name": "D \u00d7 V \u00d7 F > R",
       "summary": "An interactive app that scores Dissatisfaction, Vision, First steps, and Resistance for a change you name. You leave knowing whether the change can happen, and which factor is at zero. Useful when a change is stalling and you need to see why.",
       "status": "beta",
       "themes": [
