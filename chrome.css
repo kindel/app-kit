@@ -182,13 +182,22 @@ a.apps-tile-open:active .apps-tile-icon {
 }
 
 a.apps-tile-open:focus-visible .apps-tile-icon,
+.apps-tile-open:focus-visible .apps-tile-icon,
 .apps-tile-about:focus-visible {
     outline: 2px solid var(--kld-blue);
     outline-offset: 3px;
 }
 
+/* A fine pointer that can hover gets the pane from the icon itself. */
+@media (min-width: 860px) and (hover: hover) and (pointer: fine) {
+    .apps-tile-about {
+        display: none;
+    }
+}
+
 @media (forced-colors: active) {
     a.apps-tile-open:focus-visible .apps-tile-icon,
+    .apps-tile-open:focus-visible .apps-tile-icon,
     .apps-tile-about:focus-visible,
     a.apps-theme-chip.is-active {
         outline: 2px solid CanvasText;

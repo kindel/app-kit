@@ -73,7 +73,7 @@
         {{- if $href }}
         <a class="apps-tile-open" href="{{ $href }}">
         {{- else }}
-        <div class="apps-tile-open">
+        <div class="apps-tile-open" data-tile-focus aria-label="{{ $aboutLabel }}">
         {{- end }}
           <img class="apps-tile-icon" src="{{ printf "%s%s.png" $iconBase $card.id }}" width="88" height="88" alt="">
           <span class="apps-tile-name">{{ $card.name }}</span>

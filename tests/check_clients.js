@@ -72,9 +72,22 @@ if (!launcher.includes('event.preventDefault()')) {
 if (launcher.includes("apps-tile-open")) {
   fail("launcher.js must not bind the app tile");
 }
+if (!launcher.includes("minHeight")) {
+  fail("launcher.js must reserve a stable pane height");
+}
+if (!launcher.includes("data-tile-focus")) {
+  fail("launcher.js must keep a coming-soon tile focusable when the info glyph is hidden");
+}
+const launcherHtml = fs.readFileSync(path.join(root, "layouts/partials/app-kit/launcher.html"), "utf8");
+if (!launcherHtml.includes("data-tile-focus")) {
+  fail("launcher tile for an unpublished app must be focusable");
+}
 const chrome = fs.readFileSync(path.join(root, "chrome.css"), "utf8");
 if (chrome.includes("tools-preview") || chrome.includes("tools-steam")) {
   fail("chrome.css still has the screenshot card");
+}
+if (!chrome.includes("(min-width: 860px) and (hover: hover) and (pointer: fine)")) {
+  fail("chrome.css must hide the info glyph only for a fine pointer that can hover");
 }
 const hero = fs.readFileSync(path.join(root, "layouts/partials/app-kit/hero.html"), "utf8");
 if (hero.includes("actionLabel") || hero.includes("actionHref")) {

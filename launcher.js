@@ -14,11 +14,13 @@
     var sheet = root.querySelector("[data-launcher-sheet]");
     var sheetBody = root.querySelector("[data-launcher-sheet-body]");
     var desktopQuery = window.matchMedia(DESKTOP);
+    var fineHover = window.matchMedia("(hover: hover) and (pointer: fine)");
     var hovered = "";
     var pinned = "";
     var shownId = "";
     var opener = null;
     var hideTimer = 0;
+    var paneWidth = -1;
 
     function known(theme) {
       if (!theme) return true;
@@ -66,6 +68,59 @@
         var on = open && buttons[i].getAttribute("data-about") === id;
         buttons[i].setAttribute("aria-expanded", on ? "true" : "false");
       }
+    }
+
+    // Coming-soon tiles are not links. When the info glyph is hidden, the tile itself takes focus.
+    function syncComingSoonFocus() {
+      var on = desktopQuery.matches && fineHover.matches;
+      var nodes = root.querySelectorAll("[data-tile-focus]");
+      for (var i = 0; i < nodes.length; i++) {
+        if (on) nodes[i].setAttribute("tabindex", "0");
+        else nodes[i].removeAttribute("tabindex");
+      }
+    }
+
+    // Keep the pane at least as tall as its tallest details so hover does not move the footer.
+    function reservePane(force) {
+      if (!pane) return;
+      if (!desktopQuery.matches) {
+        pane.style.minHeight = "";
+        paneWidth = -1;
+        return;
+      }
+      var width = pane.getBoundingClientRect().width;
+      if (width < 8) return;
+      if (!force && pane.style.minHeight && Math.abs(width - paneWidth) < 0.5) return;
+      paneWidth = width;
+      var probe = document.createElement("div");
+      probe.className = "apps-launcher-pane";
+      probe.setAttribute("aria-hidden", "true");
+      probe.style.cssText = "position:fixed;left:0;top:0;visibility:hidden;pointer-events:none;margin:0;min-height:0;height:auto;max-height:none;box-sizing:border-box;width:" + Math.floor(width) + "px;";
+      root.appendChild(probe);
+      var max = 0;
+      function note() {
+        if (probe.offsetHeight > max) max = probe.offsetHeight;
+      }
+      var tpls = root.querySelectorAll("template[data-about-for]");
+      for (var i = 0; i < tpls.length; i++) {
+        probe.replaceChildren(tpls[i].content.cloneNode(true));
+        note();
+      }
+      if (empty) {
+        var placeholder = document.createElement("p");
+        placeholder.className = "apps-launcher-pane-empty";
+        placeholder.textContent = empty.textContent;
+        probe.replaceChildren(placeholder);
+        note();
+      }
+      probe.remove();
+      var box = window.getComputedStyle(pane);
+      var min = max;
+      if (box.boxSizing !== "border-box") {
+        min = max - parseFloat(box.paddingTop) - parseFloat(box.paddingBottom) - parseFloat(box.borderTopWidth) - parseFloat(box.borderBottomWidth);
+      }
+      if (min < 0) min = 0;
+      pane.style.minHeight = Math.ceil(min) + "px";
     }
 
     function render() {
@@ -234,10 +289,35 @@
         }
         shownId = "";
         render();
+        syncComingSoonFocus();
+        paneWidth = -1;
+        reservePane(false);
+      });
+    }
+    if (typeof fineHover.addEventListener === "function") {
+      fineHover.addEventListener("change", function () {
+        syncComingSoonFocus();
       });
     }
 
     apply(themeFromUrl(), false);
+    syncComingSoonFocus();
+    reservePane(false);
+    if (window.ResizeObserver && pane && pane.parentElement) {
+      var observer = new ResizeObserver(function () {
+        reservePane(false);
+      });
+      observer.observe(pane.parentElement);
+    } else {
+      window.addEventListener("resize", function () {
+        reservePane(false);
+      });
+    }
+    if (document.fonts && document.fonts.ready && typeof document.fonts.ready.then === "function") {
+      document.fonts.ready.then(function () {
+        reservePane(true);
+      });
+    }
   }
 
   if (document.readyState === "loading") {

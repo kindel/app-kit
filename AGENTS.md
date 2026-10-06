@@ -24,7 +24,7 @@ Theme labels and chip order are Tig's decision. The current list is Being Princi
 
 `30-60-90` is not published. Keep `status` at `later` and do not add `entry`. Do not add a screenshot preview. The catalog shows it as a dimmed coming-soon tile when the host says so.
 
-The hero partial is site chrome only: kicker, title, subtitle, All The Apps. Do not add app controls to it. App controls go in the frame toolbar. The info button on a launcher tile is separate from the app link, and its accessible name is "About" plus the app name. Theme-chip clicks still let Ctrl, Cmd, Shift, and Alt through.
+The hero partial is site chrome only: kicker, title, subtitle, All The Apps. Do not add app controls to it. App controls go in the frame toolbar. The info button on a launcher tile is separate from the app link, and its accessible name is "About" plus the app name. Hide it at 860px and up when the primary pointer is fine and can hover. Keep it for a coarse pointer or when hover is unavailable. A coming-soon tile is not a link, so it takes keyboard focus in that hidden-button case. The desktop pane reserves the tallest details height so hover does not move the footer. Theme-chip clicks still let Ctrl, Cmd, Shift, and Alt through.
 
 ## Tests
 
