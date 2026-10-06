@@ -8,7 +8,8 @@ The page shell stays with the host. This repo does not ship Hugo layouts for an 
 
 | File | What it is |
 |------|------------|
-| `manifest.json` | Apps, theme list, entry paths, and route templates. |
+| `manifest.json` | Apps, theme list, entry paths, route templates, and preview crops. |
+| `previews/` | Webp crops of each published app's first screen. |
 | `manifest.schema.json` | Schema for that file. |
 | `feedback.js` | Feedback form client. |
 | `attribution.js` | Renders the required attribution link. |
@@ -16,7 +17,9 @@ The page shell stays with the host. This repo does not ship Hugo layouts for an 
 | `tokens.css` | `--kld-*` custom properties. |
 | `hugo.toml` | Mounts the files when this repo is a Hugo module. |
 
-Names and summaries in `manifest.json` are copied from each app's `card.json` (`github.com/kindel/<id>`). Do not invent them. `30-60-90` is not published: status `later`, no `entry`.
+Names and summaries in `manifest.json` are copied from each app's `card.json` (`github.com/kindel/<id>`). Do not invent them. `30-60-90` is not published: status `later`, no `entry`, and no `preview`.
+
+Each published app has `preview.src` (a file in `previews/`) and `preview.alt` (what that crop shows). The crops are the built app, not a mock. A host mounts `previews` at `static/images/app-kit` and prefixes `src` with that public path.
 
 Theme labels, in chip order: Being Principled, Hiring, People Management, Planning and Change. Tig can still change the names and the order.
 
@@ -67,6 +70,7 @@ With no mounts of your own, `hugo.toml` in this repo places the files at:
 - `static/js/app-kit/attribution.js`
 - `static/css/app-kit/attribution.css`
 - `static/css/app-kit/tokens.css`
+- `static/images/app-kit/` (the `previews/` directory)
 
 A host that sets mounts on the import replaces those. Point them at the same targets, or the files will not land.
 

@@ -22,7 +22,9 @@ Shared kit for Kindel apps: `manifest.json`, `feedback.js`, `attribution.js`, `t
 
 Theme labels and chip order are Tig's decision. The current list is Being Principled, Hiring, People Management, Planning and Change. Do not rename them here unless he says so.
 
-`30-60-90` is not published. Keep `status` at `later` and do not add `entry`.
+`30-60-90` is not published. Keep `status` at `later` and do not add `entry` or `preview`.
+
+A published app needs `preview` with `src` (a webp in `previews/`) and `alt` describing that crop. Do not invent a screen. Recapture it from the built app.
 
 ## Tests
 

@@ -19,3 +19,6 @@
   [[module.mounts]]
     source = "tokens.css"
     target = "static/css/app-kit/tokens.css"
+  [[module.mounts]]
+    source = "previews"
+    target = "static/images/app-kit"
