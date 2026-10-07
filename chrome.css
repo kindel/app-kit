@@ -394,42 +394,11 @@ a.apps-tile-open:focus-visible .apps-tile-icon,
     color: var(--kld-line);
 }
 
-/* Slim site bar: navbar, and All The Apps on an app page. No hero image. */
+/* Slim site bar: the navbar. No hero image and no catalog button. */
 .kld-appbar {
     background-color: #111827;
     background-image: none;
     color: #ffffff;
-}
-
-.kld-appbar-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.35rem 0.75rem;
-}
-
-.kld-appbar-row > nav {
-    flex: 1 1 16rem;
-    min-width: 0;
-}
-
-.kld-appbar .kld-hero-actions {
-    margin: 0;
-    padding: 0 1rem 0.65rem;
-}
-
-@media (min-width: 860px) {
-    .kld-appbar .kld-hero-actions {
-        padding: 0 1.25rem 0 0;
-    }
-}
-
-.kld-appbar .kld-button {
-    width: auto;
-    min-height: 2.2rem;
-    padding: 0.4rem 0.8rem;
-    font-size: 0.92rem;
 }
 
 .app-frame {
