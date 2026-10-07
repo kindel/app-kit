@@ -41,6 +41,7 @@
     <div class="apps-launcher-grid">
       {{- range sort .Site.Data.tools "name" }}
       {{- $card := . -}}
+      {{- if $card.unlisted }}{{ continue }}{{ end -}}
       {{- $info := index $appsByID $card.id -}}
       {{- $themeIDs := slice -}}
       {{- $themeLabels := slice -}}
@@ -103,6 +104,7 @@
   <div class="apps-launcher-templates" hidden>
     {{- range sort .Site.Data.tools "name" }}
     {{- $card := . -}}
+    {{- if $card.unlisted }}{{ continue }}{{ end -}}
     {{- $info := index $appsByID $card.id -}}
     {{- $themeLabels := slice -}}
     {{- with $info -}}

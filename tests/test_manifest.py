@@ -74,6 +74,12 @@ class ManifestTests(unittest.TestCase):
         errors = v.theme_errors(manifest)
         self.assertTrue(any("duplicate theme id" in msg for msg in errors), errors)
 
+    def test_unlisted_is_allowed(self):
+        manifest = copy.deepcopy(self.manifest)
+        manifest["apps"][0]["unlisted"] = True
+        errors = v.schema_errors(manifest, self.schema)
+        self.assertEqual(errors, [], "\n".join(errors))
+
     def test_schema_rejects_extra_field_and_bad_status(self):
         extra = copy.deepcopy(self.manifest)
         extra["note"] = "nope"
