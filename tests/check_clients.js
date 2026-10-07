@@ -97,7 +97,12 @@ const hero = fs.readFileSync(path.join(root, "layouts/partials/app-kit/hero.html
 if (hero.includes("actionLabel") || hero.includes("actionHref")) {
   fail("hero partial must not render an app control");
 }
-if (!hero.includes("allApps")) fail("hero partial must take All The Apps from apphost");
+if (hero.includes("allApps") || hero.includes("All The Apps") || hero.includes("kld-hero-actions")) {
+  fail("hero partial must not render an All The Apps link");
+}
+if (chrome.includes(".kld-appbar .kld-button") || chrome.includes(".kld-appbar .kld-hero-actions")) {
+  fail("chrome.css must not style an All The Apps button");
+}
 if (hero.includes("<h1") || hero.includes("kld-eyebrow")) {
   fail("hero partial must stay a navbar bar, without a page heading");
 }
