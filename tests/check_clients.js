@@ -82,8 +82,9 @@ const launcherHtml = fs.readFileSync(path.join(root, "layouts/partials/app-kit/l
 if (!launcherHtml.includes("data-tile-focus")) {
   fail("launcher tile for an unpublished app must be focusable");
 }
-if (!launcherHtml.includes("$card.unlisted")) {
-  fail("launcher must skip a card with unlisted set");
+const unlistedGuards = launcherHtml.match(/if \$card\.unlisted \}\}\{\{ continue \}\}/g) || [];
+if (unlistedGuards.length < 2) {
+  fail("launcher must skip an unlisted card in the grid and in the about templates");
 }
 const chrome = fs.readFileSync(path.join(root, "chrome.css"), "utf8");
 if (chrome.includes("tools-preview") || chrome.includes("tools-steam")) {

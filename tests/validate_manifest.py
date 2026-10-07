@@ -6,7 +6,7 @@ Checks, in order:
 1. JSON Schema (manifest.schema.json): shape, types, allowed fields.
 2. Theme ids are unique, and every app theme id is in that list.
 3. Every app id has a card.json in github.com/kindel/<id>, and the
-   manifest name, summary, and status match that card. A card with no
+   manifest name, summary, status, and unlisted flag match that card. A card with no
    href must not grow an entry. A card with an href must.
 """
 
@@ -111,6 +111,8 @@ def card_errors(manifest, fetch=fetch_card) -> list[str]:
         for field in ("name", "summary", "status"):
             if card.get(field) != app.get(field):
                 found.append(f"{app_id}: {field} does not match card.json")
+        if bool(card.get("unlisted")) != bool(app.get("unlisted")):
+            found.append(f"{app_id}: unlisted does not match card.json")
         href = card.get("href")
         entry = app.get("entry")
         # A truthy non-string (a number, an object) must be reported.

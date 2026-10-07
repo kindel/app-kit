@@ -101,4 +101,4 @@ node --check launcher.js
 node tests/check_clients.js
 ```
 
-The manifest test fetches each app's `card.json` from GitHub. It checks the schema, that every theme id on an app is in the theme list, and that every app id has a card whose name, summary, and status match.
+The manifest test fetches each app's `card.json` from GitHub. It checks the schema, that every theme id on an app is in the theme list, and that every app id has a card whose name, summary, status, and unlisted flag match.
