@@ -54,6 +54,9 @@
           "type": "string",
           "enum": ["live", "beta", "later"]
         },
+        "unlisted": {
+          "type": "boolean"
+        },
         "themes": {
           "type": "array",
           "minItems": 1,

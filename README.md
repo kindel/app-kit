@@ -28,7 +28,7 @@ Partials live under `layouts/partials/app-kit/`. A host that already has `site-n
 
 `app-kit/frame-start.html` opens the app surface and its toolbar (icon, name, optional controls). Pass `page` as well as `card` so the frame can read a title the hero stashed. When the hero call set `title`, that title is the page's one `h1` at the top of the frame, and an explicit `subtitle` sits under it. Otherwise the toolbar name is the `h1`. When `card.status` is `beta`, the toolbar shows the host's `statusBeta` label beside the name. Live and later apps do not. `app-kit/frame-end.html` closes the frame. Optional `nameHref` makes the name a link. Optional `controls` is HTML for that app's own toolbar controls.
 
-`app-kit/summary.html` prints the card summary. `app-kit/related.html` prints the card's related essays. `app-kit/feedback.html` is the footer form. `app-kit/launcher.html` is the icon grid. Call it from the catalog shortcode with the shortcode context.
+`app-kit/summary.html` prints the card summary. `app-kit/related.html` prints the card's related essays. `app-kit/feedback.html` is the footer form. `app-kit/launcher.html` is the icon grid. Call it from the catalog shortcode with the shortcode context. A card with `unlisted` set to true is left out of that grid. The host can still mount the card and open the app page.
 
 Words and host paths (`appBase`, `allApps`, `iconBase`, chip label, feedback sentences, sheet labels) come from the host's `data/apphost.json`, not from these partials. Each app still ships its own `icon.png`. The host mounts that file where `iconBase` points (kindel.com uses `/images/tools/`).
 
@@ -101,4 +101,4 @@ node --check launcher.js
 node tests/check_clients.js
 ```
 
-The manifest test fetches each app's `card.json` from GitHub. It checks the schema, that every theme id on an app is in the theme list, and that every app id has a card whose name, summary, and status match.
+The manifest test fetches each app's `card.json` from GitHub. It checks the schema, that every theme id on an app is in the theme list, and that every app id has a card whose name, summary, status, and unlisted flag match.

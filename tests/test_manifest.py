@@ -74,6 +74,43 @@ class ManifestTests(unittest.TestCase):
         errors = v.theme_errors(manifest)
         self.assertTrue(any("duplicate theme id" in msg for msg in errors), errors)
 
+    def test_unlisted_must_match_card(self):
+        app = {
+            "id": "facet",
+            "name": "Facet",
+            "summary": "Edit a facet or a question, then open a pull request.",
+            "status": "beta",
+            "themes": ["being-principled"],
+            "entry": "facet/",
+            "unlisted": True,
+        }
+
+        def card(unlisted):
+            body = {
+                "id": "facet",
+                "name": app["name"],
+                "summary": app["summary"],
+                "status": app["status"],
+                "href": "/kld/apps/facet/",
+            }
+            if unlisted is not None:
+                body["unlisted"] = unlisted
+            return body
+
+        missing = v.card_errors({"apps": [app]}, fetch=lambda app_id: (card(None), None))
+        self.assertTrue(any("unlisted does not match" in msg for msg in missing), missing)
+        self.assertEqual(v.card_errors({"apps": [app]}, fetch=lambda app_id: (card(True), None)), [])
+        listed = dict(app)
+        del listed["unlisted"]
+        flagged = v.card_errors({"apps": [listed]}, fetch=lambda app_id: (card(True), None))
+        self.assertTrue(any("unlisted does not match" in msg for msg in flagged), flagged)
+
+    def test_unlisted_is_allowed(self):
+        manifest = copy.deepcopy(self.manifest)
+        manifest["apps"][0]["unlisted"] = True
+        errors = v.schema_errors(manifest, self.schema)
+        self.assertEqual(errors, [], "\n".join(errors))
+
     def test_schema_rejects_extra_field_and_bad_status(self):
         extra = copy.deepcopy(self.manifest)
         extra["note"] = "nope"

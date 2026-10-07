@@ -82,6 +82,10 @@ const launcherHtml = fs.readFileSync(path.join(root, "layouts/partials/app-kit/l
 if (!launcherHtml.includes("data-tile-focus")) {
   fail("launcher tile for an unpublished app must be focusable");
 }
+const unlistedGuards = launcherHtml.match(/if \$card\.unlisted \}\}\{\{ continue \}\}/g) || [];
+if (unlistedGuards.length < 2) {
+  fail("launcher must skip an unlisted card in the grid and in the about templates");
+}
 const chrome = fs.readFileSync(path.join(root, "chrome.css"), "utf8");
 if (chrome.includes("tools-preview") || chrome.includes("tools-steam")) {
   fail("chrome.css still has the screenshot card");
