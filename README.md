@@ -16,6 +16,7 @@ Shared files for Kindel apps, so a host other than kindel.com can mount the same
 | `chrome.css` | Launcher, app frame, feedback, and related-essay styles. |
 | `launcher.js` | Theme chips, the desktop detail pane, and the mobile sheet. |
 | `layouts/partials/app-kit/` | Hero, frame, launcher, summary, related essays, feedback. |
+| `data/essay_slugs.json` | Offline list of Essays-category slugs for the related-essay links. |
 | `hugo.toml` | Mounts the files when this repo is a Hugo module. |
 
 Names and summaries in `manifest.json` are copied from each app's `card.json` (`github.com/kindel/<id>`). Do not invent them. `30-60-90` is not published: status `later`, and no `entry`.
@@ -28,7 +29,7 @@ Partials live under `layouts/partials/app-kit/`. A host that already has `site-n
 
 `app-kit/frame-start.html` opens the app surface and its toolbar (icon, name, optional controls). Pass `page` as well as `card` so the frame can read a title the hero stashed. When the hero call set `title`, that title is the page's one `h1` at the top of the frame, and an explicit `subtitle` sits under it. Otherwise the toolbar name is the `h1`. When `card.status` is `beta`, the toolbar shows the host's `statusBeta` label beside the name. Live and later apps do not. `app-kit/frame-end.html` closes the frame. Optional `nameHref` makes the name a link. Optional `controls` is HTML for that app's own toolbar controls.
 
-`app-kit/summary.html` prints the card summary. `app-kit/related.html` prints the card's related essays. `app-kit/feedback.html` is the footer form. `app-kit/launcher.html` is the icon grid. Call it from the catalog shortcode with the shortcode context. A card with `unlisted` set to true is left out of that grid. The host can still mount the card and open the app page.
+`app-kit/summary.html` prints the card summary. `app-kit/related.html` prints the card's related essays. A post in the WordPress Essays category (slug essays, id 448) is linked at https://kindel.com/essays/<slug>/. Other blog links stay on blog.kindel.com. The offline slug list is `data/essay_slugs.json`; the note in that file says how to refresh it. `app-kit/feedback.html` is the footer form. `app-kit/launcher.html` is the icon grid. Call it from the catalog shortcode with the shortcode context. A card with `unlisted` set to true is left out of that grid. The host can still mount the card and open the app page.
 
 Words and host paths (`appBase`, `iconBase`, chip label, feedback sentences, sheet labels) come from the host's `data/apphost.json`, not from these partials. Each app still ships its own `icon.png`. The host mounts that file where `iconBase` points (kindel.com uses `/images/tools/`).
 
@@ -84,6 +85,7 @@ With no mounts of your own, `hugo.toml` in this repo places the files at:
 - `static/css/app-kit/tokens.css`
 - `static/css/app-kit/chrome.css`
 - `layouts/partials/app-kit/` (hero, frame, launcher, feedback, related essays)
+- `data/essay_slugs.json`
 
 A host that sets mounts on the import replaces those. Point them at the same targets, or the files will not land.
 

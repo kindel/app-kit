@@ -1,0 +1,83 @@
+{{- /* Essays category (slug essays, id 448). Live WordPress list, then data/essay_slugs.json if that fetch fails. */ -}}
+{{- $bySlug := dict -}}
+{{- $byId := dict -}}
+{{- $posts := slice -}}
+{{- $more := true -}}
+{{- $stamp := now.Unix -}}
+{{- $opts := dict "method" "GET" "headers" (dict "Accept" "application/json" "User-Agent" "kindel-app-kit") -}}
+{{- range $n := seq 20 -}}
+  {{- if $more -}}
+    {{- $url := printf "https://blog.kindel.com/wp-json/wp/v2/posts?categories=448&per_page=100&page=%d&_fields=id,slug,link&_=%d" $n $stamp -}}
+    {{- $attempt := try (resources.GetRemote $url $opts) -}}
+    {{- if or $attempt.Err (not $attempt.Value) -}}
+      {{- $more = false -}}
+    {{- else -}}
+      {{- $body := $attempt.Value.Content | strings.TrimSpace -}}
+      {{- if not (hasPrefix $body "[") -}}
+        {{- $more = false -}}
+      {{- else if findRE `^\[\s*\]$` $body -}}
+        {{- $more = false -}}
+      {{- else -}}
+        {{- $parsed := try (transform.Unmarshal $body) -}}
+        {{- if or $parsed.Err (not (reflect.IsSlice $parsed.Value)) -}}
+          {{- $more = false -}}
+        {{- else -}}
+          {{- range $parsed.Value -}}
+            {{- $posts = $posts | append . -}}
+          {{- end -}}
+          {{- if lt (len $parsed.Value) 100 -}}
+            {{- $more = false -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if eq (len $posts) 0 -}}
+  {{- warnf "essay catalog: WordPress fetch failed; using data/essay_slugs.json" -}}
+  {{- with index site.Data "essay_slugs" -}}
+    {{- range $k, $v := .by_slug -}}
+      {{- $safe := partial "app-kit/essay-slug.html" $v -}}
+      {{- $key := partial "app-kit/essay-slug.html" $k -}}
+      {{- if and $safe $key -}}
+        {{- $bySlug = merge $bySlug (dict $key $safe) -}}
+      {{- end -}}
+    {{- end -}}
+    {{- range $k, $v := .by_id -}}
+      {{- $safe := partial "app-kit/essay-slug.html" $v -}}
+      {{- $id := printf "%s" $k -}}
+      {{- if and $safe (findRE `^[0-9]+$` $id) -}}
+        {{- $byId = merge $byId (dict (printf "%d" (int $id)) $safe) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- else -}}
+  {{- range $posts -}}
+    {{- $safe := partial "app-kit/essay-slug.html" .slug -}}
+    {{- if $safe -}}
+      {{- $bySlug = merge $bySlug (dict $safe $safe) -}}
+      {{- $postID := int .id -}}
+      {{- if gt $postID 0 -}}
+        {{- $byId = merge $byId (dict (printf "%d" $postID) $safe) -}}
+      {{- end -}}
+      {{- $link := printf "%s" .link -}}
+      {{- if or (hasPrefix $link "https://") (hasPrefix $link "http://") -}}
+        {{- $lu := urls.Parse $link -}}
+        {{- if $lu -}}
+          {{- $lp := $lu.Path | strings.TrimSuffix "/" | strings.TrimPrefix "/" -}}
+          {{- $lparts := split $lp "/" -}}
+          {{- if eq (len $lparts) 4 -}}
+            {{- $from := partial "app-kit/essay-slug.html" (index $lparts 3) -}}
+            {{- if and $from (ne $from $safe) -}}
+              {{- $bySlug = merge $bySlug (dict $from $safe) -}}
+            {{- end -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if and (eq (len $bySlug) 0) (eq (len $byId) 0) -}}
+  {{- warnf "essay catalog: no essay slugs available" -}}
+{{- end -}}
+{{- return (dict "bySlug" $bySlug "byId" $byId) -}}
