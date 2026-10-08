@@ -39,6 +39,7 @@ class EssayLinkTests(unittest.TestCase):
         self.assertIn("blog.kindel.com", href)
         self.assertIn("categories=448", catalog)
         self.assertIn("essay_slugs", catalog)
+        self.assertIn("$posts = slice", catalog)
         self.assertIn('source = "data"', hugo)
 
     def test_repo_has_no_blog_permalink_for_an_essay(self):

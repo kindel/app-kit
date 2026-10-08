@@ -10,17 +10,21 @@
     {{- $url := printf "https://blog.kindel.com/wp-json/wp/v2/posts?categories=448&per_page=100&page=%d&_fields=id,slug,link&_=%d" $n $stamp -}}
     {{- $attempt := try (resources.GetRemote $url $opts) -}}
     {{- if or $attempt.Err (not $attempt.Value) -}}
+      {{- /* Any missed page would hide later essays. Drop the partial list and use the snapshot. */ -}}
       {{- $more = false -}}
+      {{- $posts = slice -}}
     {{- else -}}
       {{- $body := $attempt.Value.Content | strings.TrimSpace -}}
       {{- if not (hasPrefix $body "[") -}}
         {{- $more = false -}}
+        {{- $posts = slice -}}
       {{- else if findRE `^\[\s*\]$` $body -}}
         {{- $more = false -}}
       {{- else -}}
         {{- $parsed := try (transform.Unmarshal $body) -}}
         {{- if or $parsed.Err (not (reflect.IsSlice $parsed.Value)) -}}
           {{- $more = false -}}
+          {{- $posts = slice -}}
         {{- else -}}
           {{- range $parsed.Value -}}
             {{- $posts = $posts | append . -}}
