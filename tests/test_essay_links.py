@@ -37,6 +37,8 @@ class EssayLinkTests(unittest.TestCase):
         self.assertIn('partial "app-kit/essay-href.html"', related)
         self.assertIn("https://kindel.com/essays/", href)
         self.assertIn("blog.kindel.com", href)
+        self.assertIn("try (urls.Parse", href)
+        self.assertIn("EscapedFragment", href)
         self.assertIn("categories=448", catalog)
         self.assertIn("essay_slugs", catalog)
         self.assertIn("$posts = slice", catalog)

@@ -11,8 +11,9 @@
   {{- $raw = printf "https:%s" $raw -}}
 {{- end -}}
 {{- if or (hasPrefix $raw "https://") (hasPrefix $raw "http://") -}}
-  {{- $u := urls.Parse $raw -}}
-  {{- if $u -}}
+  {{- $parsed := try (urls.Parse $raw) -}}
+  {{- if and (not $parsed.Err) $parsed.Value -}}
+    {{- $u := $parsed.Value -}}
     {{- $host := lower $u.Host -}}
     {{- $host = $host | strings.TrimPrefix "www." -}}
     {{- if and (or (eq $u.Scheme "https") (eq $u.Scheme "http")) (eq $host "blog.kindel.com") -}}
@@ -56,7 +57,7 @@
         {{- $safe := partial "app-kit/essay-slug.html" $slug -}}
         {{- if $safe -}}
           {{- $out = printf "https://kindel.com/essays/%s/" $safe -}}
-          {{- with $u.Fragment -}}
+          {{- with $u.EscapedFragment -}}
             {{- $out = printf "%s#%s" $out . -}}
           {{- end -}}
         {{- end -}}
