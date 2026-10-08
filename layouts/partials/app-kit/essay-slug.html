@@ -1,0 +1,8 @@
+{{- /* A slug is lowercase letters, digits, and single hyphens. Anything else is empty. One return: Hugo 0.143 keeps only the first. */ -}}
+{{- $slug := lower (printf "%s" .) | strings.TrimSpace -}}
+{{- $out := "" -}}
+{{- $hit := findRE `^[a-z0-9]+(?:-[a-z0-9]+)*$` $slug -}}
+{{- if and (eq (len $hit) 1) (eq (index $hit 0) $slug) -}}
+  {{- $out = $slug -}}
+{{- end -}}
+{{- return $out -}}
