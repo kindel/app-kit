@@ -26,6 +26,9 @@
     source = "launcher.js"
     target = "static/js/app-kit/launcher.js"
   [[module.mounts]]
+    source = "analytics.js"
+    target = "static/js/app-kit/analytics.js"
+  [[module.mounts]]
     source = "layouts"
     target = "layouts"
   [[module.mounts]]
