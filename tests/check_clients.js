@@ -62,6 +62,26 @@ for (const [name, value] of Object.entries(expected)) {
   if (!tokens.includes(line)) fail("tokens.css missing " + line);
 }
 
+const analytics = fs.readFileSync(path.join(root, "analytics.js"), "utf8");
+if (!analytics.includes('typeof window.gtag !== "function"')) {
+  fail("analytics.js must no-op unless window.gtag is a function");
+}
+if (!analytics.includes("window.kldTrack = kldTrack")) {
+  fail("analytics.js must publish window.kldTrack");
+}
+if (!analytics.includes('var SET_KEY = "kld-company-set"')) {
+  fail("analytics.js must keep company ids in localStorage under kld-company-set");
+}
+if (!analytics.includes("kld_company_set_count")) {
+  fail("analytics.js must send kld_company_set_count on kld_company");
+}
+if (!analytics.includes('name === "app_view"')) {
+  fail("analytics.js must send app_view once per load");
+}
+if (analytics.includes("document.cookie")) {
+  fail("analytics.js must not set a cookie");
+}
+
 const launcher = fs.readFileSync(path.join(root, "launcher.js"), "utf8");
 if (!launcher.includes("event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey")) {
   fail("launcher.js must let modified theme-chip clicks follow href");

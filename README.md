@@ -15,6 +15,7 @@ Shared files for Kindel apps, so a host other than kindel.com can mount the same
 | `tokens.css` | `--kld-*` custom properties. |
 | `chrome.css` | Launcher, app frame, feedback, and related-essay styles. |
 | `launcher.js` | Theme chips, the desktop detail pane, and the mobile sheet. |
+| `analytics.js` | `kldTrack` for app and company usage events. |
 | `layouts/partials/app-kit/` | Hero, frame, launcher, summary, related essays, feedback. |
 | `data/essay_slugs.json` | Offline list of Essays-category slugs for the related-essay links. |
 | `hugo.toml` | Mounts the files when this repo is a Hugo module. |
@@ -64,6 +65,35 @@ MIT derivatives link to https://kindel.com. A LICENSE file is not enough. Drop a
 
 That renders "Built on Kindel apps" pointing at https://kindel.com. The destination is fixed. `KindelAttribution.render(element)` does the same from script.
 
+## Analytics
+
+`analytics.js` sends usage events through the host's `gtag`. Load it before the app script:
+
+```html
+<script src="/js/app-kit/analytics.js"></script>
+```
+
+`kldTrack(name, params)` calls `gtag("event", name, params)` when `window.gtag` is a function. It does nothing otherwise. Empty params (null, undefined, or "") are left out. It does not set a cookie. It does not send a name, an email, or anything typed into a search box. The apps pass company ids and the app id.
+
+Two events:
+
+| Event | When | Params |
+|-------|------|--------|
+| `app_view` | Once per page load. | `app` |
+| `kld_company` | The visitor lands on a company, or picks a different one. | `app`, `company`, `previous_company`, `source`, `kld_company_set_count` |
+
+`app` is the app id (`porridge`, `biq`, `facet`). `company` and `previous_company` are company ids (`generic`, `blue-origin`), not display names. `generic` is the universal set. `previous_company` is omitted on the first company of a visit. `source` is `picker` when the visitor uses the company control, `url` when the page address chose the company (including the default when `c` is absent), and `link` when an in-app link chose the company without a new document load.
+
+`kld_company_set_count` is the number of distinct company ids this browser has sent. The ids are a JSON array in `localStorage` under `kld-company-set`, and nothing else is stored there. Every Kindel app on the same origin shares that list, so a visitor who opens Blue Origin in one app and Amazon in another counts as two. A value that is not a company id is not stored. Register `kld_company_set_count` in GA4 as an event-scoped custom metric (an integer), not a dimension, so an exploration can filter it to two or more.
+
+A host that lists its own Hugo mounts has to add this one, or the file never lands:
+
+```toml
+[[module.imports.mounts]]
+  source = "analytics.js"
+  target = "static/js/app-kit/analytics.js"
+```
+
 ## Tokens
 
 Link `tokens.css` from the host. The values match `kindelwww` `static/css/custom.css`.
@@ -81,6 +111,7 @@ With no mounts of your own, `hugo.toml` in this repo places the files at:
 - `static/js/app-kit/feedback.js`
 - `static/js/app-kit/attribution.js`
 - `static/js/app-kit/launcher.js`
+- `static/js/app-kit/analytics.js`
 - `static/css/app-kit/attribution.css`
 - `static/css/app-kit/tokens.css`
 - `static/css/app-kit/chrome.css`
@@ -100,7 +131,9 @@ python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 .venv/bin/python -m unittest discover -s tests -v
 node --check launcher.js
+node --check analytics.js
 node tests/check_clients.js
+node tests/test_analytics.js
 ```
 
 The manifest test fetches each app's `card.json` from GitHub. It checks the schema, that every theme id on an app is in the theme list, and that every app id has a card whose name, summary, status, and unlisted flag match.
