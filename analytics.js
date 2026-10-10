@@ -29,12 +29,14 @@
 
   function remember(company) {
     var set = readSet();
-    if (set.indexOf(company) === -1) {
-      set.push(company);
-      try {
-        window.localStorage.setItem(SET_KEY, JSON.stringify(set));
-      } catch (e) {}
-    }
+    if (set.indexOf(company) === -1) set.push(company);
+    // A repeat still rewrites. Otherwise junk next to a known id stays forever.
+    try {
+      var next = JSON.stringify(set);
+      if (window.localStorage.getItem(SET_KEY) !== next) {
+        window.localStorage.setItem(SET_KEY, next);
+      }
+    } catch (e) {}
     return set.length;
   }
 

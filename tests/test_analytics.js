@@ -128,6 +128,20 @@ function saved(store) {
   }
 }
 
+// Repeating a company that is already stored still drops junk beside it.
+{
+  const calls = [];
+  const store = storage({ "kld-company-set": JSON.stringify(["generic", "a@b.c", "generic"]) });
+  const sandbox = load(function () { calls.push([].slice.call(arguments)); }, store);
+  sandbox.kldTrack("kld_company", { app: "biq", company: "generic", source: "url" });
+  if (calls[0][2].kld_company_set_count !== 1) {
+    fail("dirty repeat counted junk: " + calls[0][2].kld_company_set_count);
+  }
+  if (JSON.stringify(saved(store)) !== JSON.stringify(["generic"])) {
+    fail("dirty set was not rewritten on a repeat: " + JSON.stringify(saved(store)));
+  }
+}
+
 // link is a real source. A non-id company is not stored.
 {
   const calls = [];
