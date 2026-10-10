@@ -135,7 +135,7 @@ if (!chrome.includes(".app-frame-beta")) {
 }
 
 const feedbackHtml = fs.readFileSync(path.join(root, "layouts/partials/app-kit/feedback.html"), "utf8");
-if (!feedbackHtml.includes(".facet")) {
+if (!feedbackHtml.includes("if .facet")) {
   fail("Facet footer line must be opt-in");
 }
 if (!feedbackHtml.includes("facetFixLead") || !feedbackHtml.includes("facetFixLink")) {
