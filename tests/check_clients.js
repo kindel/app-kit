@@ -64,7 +64,7 @@ for (const [name, value] of Object.entries(expected)) {
 
 const analytics = fs.readFileSync(path.join(root, "analytics.js"), "utf8");
 if (!analytics.includes('typeof window.gtag !== "function"')) {
-  fail("analytics.js must no-op unless window.gtag is a function");
+  fail("analytics.js must not emit an event unless window.gtag is a function");
 }
 if (!analytics.includes("window.kldTrack = kldTrack")) {
   fail("analytics.js must publish window.kldTrack");

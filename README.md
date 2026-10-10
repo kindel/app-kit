@@ -73,7 +73,9 @@ That renders "Built on Kindel apps" pointing at https://kindel.com. The destinat
 <script src="/js/app-kit/analytics.js"></script>
 ```
 
-`kldTrack(name, params)` calls `gtag("event", name, params)` when `window.gtag` is a function. It does nothing otherwise. Empty params (null, undefined, or "") are left out. It does not set a cookie. It does not send a name, an email, or anything typed into a search box. The apps pass company ids and the app id.
+`kldTrack(name, params)` calls `gtag("event", name, params)` when `window.gtag` is a function. It does not emit an event otherwise. Empty params (null, undefined, or "") are left out. Every other nonempty field the caller passes is forwarded, including a field named `name` or `email`. The helper does not strip those keys. Callers must not pass a name, an email, search text, or any other personal data. It does not set a cookie.
+
+A valid `kld_company` is written to `localStorage` before that `gtag` check. The company id is remembered even when `gtag` is missing, so a later event can count it. The stored value is company ids only.
 
 Two events:
 
@@ -84,7 +86,7 @@ Two events:
 
 `app` is the app id (`porridge`, `biq`, `facet`). `company` and `previous_company` are company ids (`generic`, `blue-origin`), not display names. `generic` is the universal set. `previous_company` is omitted on the first company of a visit. `source` is `picker` when the visitor uses the company control, `url` when the page address chose the company (including the default when `c` is absent), and `link` when an in-app link chose the company without a new document load.
 
-`kld_company_set_count` is the number of distinct company ids this browser has sent. The ids are a JSON array in `localStorage` under `kld-company-set`, and nothing else is stored there. Every Kindel app on the same origin shares that list, so a visitor who opens Blue Origin in one app and Amazon in another counts as two. A value that is not a company id is not stored. Register `kld_company_set_count` in GA4 as an event-scoped custom metric (an integer), not a dimension, so an exploration can filter it to two or more.
+`kld_company_set_count` is the number of distinct company ids this browser has opened or selected. The count includes ids remembered while `gtag` was unavailable, so it is not the number of events that reached GA. The ids are a JSON array in `localStorage` under `kld-company-set`, and nothing else is stored there. Every Kindel app on the same origin shares that list, so a visitor who opens Blue Origin in one app and Amazon in another counts as two. A value that is not a company id is not stored. Register `kld_company_set_count` in GA4 as an event-scoped custom metric (an integer), not a dimension, so an exploration can filter it to two or more.
 
 A host that lists its own Hugo mounts has to add this one, or the file never lands:
 
