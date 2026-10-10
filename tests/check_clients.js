@@ -134,4 +134,24 @@ if (!chrome.includes(".app-frame-beta")) {
   fail("chrome.css needs the Beta badge");
 }
 
+const feedbackHtml = fs.readFileSync(path.join(root, "layouts/partials/app-kit/feedback.html"), "utf8");
+if (!feedbackHtml.includes(".facet")) {
+  fail("Facet footer line must be opt-in");
+}
+if (!feedbackHtml.includes("facetFixLead") || !feedbackHtml.includes("facetFixLink")) {
+  fail("Facet footer copy must come from apphost");
+}
+if (!feedbackHtml.includes('src="{{ $iconBase }}facet.svg"') || !feedbackHtml.includes('alt=""')) {
+  fail("Facet footer icon must be facet.svg with an empty alt");
+}
+if (!feedbackHtml.includes('width="18"') || !feedbackHtml.includes('height="18"')) {
+  fail("Facet footer icon must be 18 by 18");
+}
+const iconRuleAt = chrome.indexOf(".app-facet-fix-icon");
+if (iconRuleAt < 0) fail("chrome.css needs .app-facet-fix-icon");
+const iconRule = chrome.slice(iconRuleAt, iconRuleAt + 280);
+if (!iconRule.includes("width: 18px") || !iconRule.includes("height: 18px") || !iconRule.includes("vertical-align: middle")) {
+  fail("chrome.css must draw the Facet icon at 18px, centered on the text");
+}
+
 console.log("clients: ok");
