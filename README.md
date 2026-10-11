@@ -86,6 +86,10 @@ Two events:
 
 `app` is the app id (`porridge`, `biq`, `facet`). `company` and `previous_company` are company ids (`generic`, `blue-origin`), not display names. `generic` is the universal set. `previous_company` is omitted on the first company of a visit. `source` is `picker` when the visitor uses the company control, `url` when the page address chose the company (including the default when `c` is absent), and `link` when an in-app link chose the company without a new document load.
 
+`app`, `company`, and `previous_company` are cleaned before they are sent. Surrounding quote marks are removed (so a JSON-encoded `"\"amazon\""` becomes `amazon`), case is lowered, and spaces become hyphens. A value that is still not a lowercase slug is dropped. A `kld_company` without a valid company is not sent at all, and nothing is stored. `previous_company` is left out when it matches `company`.
+
+When a page does not pass `app`, the helper takes it from the script tag's `data-app`, then `<html data-kld-app>`, then `<meta name="kld-app" content="...">`, then the first path segment that names a known app (`porridge`, `biq`, `facet`). Without any of those the event is sent without `app`. `window.kldCompanyId(value)` exposes the same cleanup to app code.
+
 `kld_company_set_count` is the number of distinct company ids this browser has opened or selected. The count includes ids remembered while `gtag` was unavailable, so it is not the number of events that reached GA. The ids are a JSON array in `localStorage` under `kld-company-set`, and nothing else is stored there. A later event for a company already in that list rewrites the array, so an older value that mixed in junk does not stay. Every Kindel app on the same origin shares that list, so a visitor who opens Blue Origin in one app and Amazon in another counts as two. A value that is not a company id is not stored. Register `kld_company_set_count` in GA4 as an event-scoped custom metric (an integer), not a dimension, so an exploration can filter it to two or more.
 
 A host that lists its own Hugo mounts has to add this one, or the file never lands:
