@@ -18,6 +18,24 @@
 {{- if or (not $toggle) (not $lead) (not $email) (not $placeholder) (not $send) (not $cancel) -}}
   {{- errorf "data/apphost.json is missing feedback copy" -}}
 {{- end -}}
+{{- if .facet -}}
+  {{- $appBase := "" -}}
+  {{- $iconBase := "" -}}
+  {{- $facetLead := "" -}}
+  {{- $facetLink := "" -}}
+  {{- with $host -}}
+    {{- with .appBase }}{{ $appBase = . }}{{ end -}}
+    {{- with .iconBase }}{{ $iconBase = . }}{{ end -}}
+    {{- with .facetFixLead }}{{ $facetLead = . }}{{ end -}}
+    {{- with .facetFixLink }}{{ $facetLink = . }}{{ end -}}
+  {{- end -}}
+  {{- if or (not $appBase) (not $iconBase) (not $facetLead) (not $facetLink) -}}
+    {{- errorf "data/apphost.json needs appBase, iconBase, facetFixLead, and facetFixLink" -}}
+  {{- end -}}
+  {{- if not (strings.HasSuffix $appBase "/") }}{{ $appBase = printf "%s/" $appBase }}{{ end -}}
+  {{- if not (strings.HasSuffix $iconBase "/") }}{{ $iconBase = printf "%s/" $iconBase }}{{ end -}}
+<p class="app-facet-fix">{{ $facetLead }} <a href="{{ $appBase }}facet/"><img class="app-facet-fix-icon" src="{{ $iconBase }}facet.svg" alt="" width="18" height="18"><span>{{ $facetLink }}</span></a>.</p>
+{{- end -}}
 <div class="app-feedback-section">
   <button type="button" class="kld-button kld-button-outline app-feedback-toggle" data-app="{{ $app }}">{{ $toggle }}</button>
   <div class="app-feedback-form" hidden>
