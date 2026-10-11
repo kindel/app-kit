@@ -37,7 +37,9 @@ python3 -m venv .venv
 node --check feedback.js
 node --check attribution.js
 node --check launcher.js
+node --check analytics.js
 node tests/check_clients.js
+node tests/test_analytics.js
 ```
 
 CI runs those on every pull request. The card check needs GitHub.
