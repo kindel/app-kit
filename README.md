@@ -20,7 +20,7 @@ Shared files for Kindel apps, so a host other than kindel.com can mount the same
 | `data/essay_slugs.json` | Offline list of Essays-category slugs for the related-essay links. |
 | `hugo.toml` | Mounts the files when this repo is a Hugo module. |
 
-Names and summaries in `manifest.json` are copied from each app's `card.json` (`github.com/kindel/<id>`). Do not invent them. `30-60-90` is not published: status `later`, and no `entry`.
+Names and summaries in `manifest.json` are copied from each app's `card.json` (`github.com/kindel/<id>`). Do not invent them. `30-60-90` is published as beta: status `beta`, and `entry` `30-60-90/`.
 
 Theme labels, in chip order: Being Principled, Hiring, People Management, Planning and Change. Tig can still change the names and the order.
 

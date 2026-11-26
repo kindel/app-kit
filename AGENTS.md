@@ -22,7 +22,7 @@ Shared kit for Kindel apps: `manifest.json`, feedback, attribution, tokens, and 
 
 Theme labels and chip order are Tig's decision. The current list is Being Principled, Hiring, People Management, Planning and Change. Do not rename them here unless he says so.
 
-`30-60-90` is not published. Keep `status` at `later` and do not add `entry`. Do not add a screenshot preview. The catalog shows it as a dimmed coming-soon tile when the host says so.
+`30-60-90` is published as beta. Keep `status` at `beta` and keep `entry` at `30-60-90/`. Do not add a screenshot preview. The host `statusBeta` label is the catalog badge.
 
 A card with `unlisted` set to true stays mounted and stays off the grid. The launcher skips it in the icon list and in the about templates. Facet (`kindel/facet`) is that app: `status` beta, `unlisted` true, page `/kld/apps/facet/`. Add its row to `manifest.json` only after `card.json` is on `kindel/facet` main. This check reads main, so a row while the card is only on a pull request fails CI. Do not push the card to main just to satisfy the check. Do not drop `unlisted` unless Tig says the app belongs on the grid.
 
