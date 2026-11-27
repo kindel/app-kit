@@ -67,11 +67,12 @@
       "id": "30-60-90",
       "name": "30-60-90",
       "summary": "An interactive app that writes a 30-60-90 plan document on the CBTO grid: dated horizons and inspectable evaluation criteria. You leave with a spreadsheet and a readable plan, not a welcome-kit checklist. Useful when the offer is out and the first quarter is still a vibe.",
-      "status": "later",
+      "status": "beta",
       "themes": [
         "hiring",
         "people-management"
-      ]
+      ],
+      "entry": "30-60-90/"
     },
     {
       "id": "cbto",

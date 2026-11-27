@@ -58,9 +58,9 @@ class ManifestTests(unittest.TestCase):
             porridge["routes"],
             {"principle": "{company}/{slug}/", "set": "?c={company}"},
         )
-        unpublished = next(app for app in self.manifest["apps"] if app["id"] == "30-60-90")
-        self.assertNotIn("entry", unpublished)
-        self.assertEqual(unpublished["status"], "later")
+        published_plan = next(app for app in self.manifest["apps"] if app["id"] == "30-60-90")
+        self.assertEqual(published_plan["entry"], "30-60-90/")
+        self.assertEqual(published_plan["status"], "beta")
 
     def test_unknown_theme_rejected(self):
         manifest = copy.deepcopy(self.manifest)
@@ -221,14 +221,13 @@ class ManifestTests(unittest.TestCase):
         self.assertEqual(errors, ["porridge: manifest entry must be a string"])
 
     def test_manifest_has_no_preview_field(self):
-        later = [a for a in self.manifest["apps"] if a["id"] == "30-60-90"]
-        self.assertEqual(len(later), 1)
-        self.assertNotIn("entry", later[0])
-        self.assertNotIn("preview", later[0])
+        plan = next(a for a in self.manifest["apps"] if a["id"] == "30-60-90")
+        self.assertEqual(plan["entry"], "30-60-90/")
+        self.assertNotIn("preview", plan)
         published = [a["id"] for a in self.manifest["apps"] if a.get("entry")]
         self.assertEqual(
             published,
-            ["porridge", "tenets", "sbi", "biq", "cbto", "5ps", "dvfr"],
+            ["porridge", "tenets", "sbi", "biq", "30-60-90", "cbto", "5ps", "dvfr"],
         )
         for app in self.manifest["apps"]:
             self.assertNotIn("preview", app)
